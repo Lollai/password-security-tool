@@ -1,5 +1,6 @@
 from fastapi import FastAPI, HTTPException
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, HTMLResponse
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 from typing import Optional
 import uvicorn
@@ -19,6 +20,10 @@ app = FastAPI(
 
 # Initialize password tool
 password_tool = PasswordSecurityTool()
+
+# Serve static files if directory exists
+if os.path.exists("static"):
+    app.mount("/static", StaticFiles(directory="static"), name="static")
 
 # Pydantic models per le API
 class GeneratePasswordRequest(BaseModel):
@@ -49,6 +54,80 @@ class BreachResponse(BaseModel):
     is_breached: bool
     count: Optional[int] = None
     message: str
+
+# NUOVO: Endpoint per servire la pagina HTML principale
+@app.get("/", response_class=HTMLResponse)
+async def serve_frontend():
+    """Serve la pagina HTML principale del Password Security Tool"""
+    
+    # Leggi il file HTML che hai già creato
+    html_file_path = "paste.txt"  # o il percorso del tuo file HTML
+    
+    if os.path.exists(html_file_path):
+        with open(html_file_path, "r", encoding="utf-8") as f:
+            html_content = f.read()
+        
+        # Modifica il contenuto HTML per utilizzare le API FastAPI
+        html_content = html_content.replace(
+            "// Event listeners",
+            """
+        // Configurazione API
+        const API_BASE = window.location.origin + '/api';
+        
+        // Event listeners"""
+        )
+        
+        # Aggiorna le chiamate API nel JavaScript
+        html_content = html_content.replace(
+            """setTimeout(() => {
+                const password = generatePassword(length, symbols, excludeAmbiguous);
+                const strength = calculateStrength(password);
+                updateStats('generate');""",
+            """fetch(`${API_BASE}/generate`, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                    length: length,
+                    include_symbols: symbols,
+                    exclude_ambiguous: excludeAmbiguous
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                updateStats('generate');"""
+        )
+        
+        return HTMLResponse(content=html_content, status_code=200)
+    else:
+        # Fallback: HTML inline semplice
+        return HTMLResponse(content="""
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <title>Password Security Tool</title>
+            <style>
+                body { font-family: Arial, sans-serif; margin: 50px; }
+                .container { max-width: 600px; margin: 0 auto; }
+                h1 { color: #333; }
+                .error { color: red; }
+            </style>
+        </head>
+        <body>
+            <div class="container">
+                <h1>🔐 Password Security Tool</h1>
+                <p>Benvenuto nel Password Security Tool!</p>
+                <p class="error">File HTML non trovato. Crea un file HTML o usa le API direttamente:</p>
+                <ul>
+                    <li><strong>POST /api/generate</strong> - Genera password</li>
+                    <li><strong>POST /api/check</strong> - Analizza password</li>
+                    <li><strong>POST /api/breach</strong> - Controlla breach</li>
+                    <li><strong>GET /api/stats</strong> - Statistiche</li>
+                </ul>
+                <p>Documentazione API disponibile su: <a href="/docs">/docs</a></p>
+            </div>
+        </body>
+        </html>
+        """, status_code=200)
 
 @app.post("/api/generate", response_model=PasswordResponse)
 async def generate_password(request: GeneratePasswordRequest):
