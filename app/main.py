@@ -1,7 +1,5 @@
-from fastapi import FastAPI, Request, Form, HTTPException
-from fastapi.responses import HTMLResponse, JSONResponse
-from fastapi.staticfiles import StaticFiles
-from fastapi.templating import Jinja2Templates
+from fastapi import FastAPI, HTTPException
+from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 from typing import Optional
 import uvicorn
@@ -18,23 +16,6 @@ app = FastAPI(
     description="Tool completo per la sicurezza delle password",
     version="1.0.0"
 )
-
-# Mount static files - solo se la directory esiste
-static_paths = ["../static", "static", "./static"]
-for static_path in static_paths:
-    if os.path.exists(static_path):
-        app.mount("/static", StaticFiles(directory=static_path), name="static")
-        break
-
-# Setup templates
-template_paths = ["templates", "./templates", "../templates"]
-templates_dir = "templates"
-for template_path in template_paths:
-    if os.path.exists(template_path):
-        templates_dir = template_path
-        break
-
-templates = Jinja2Templates(directory=templates_dir)
 
 # Initialize password tool
 password_tool = PasswordSecurityTool()
@@ -68,11 +49,6 @@ class BreachResponse(BaseModel):
     is_breached: bool
     count: Optional[int] = None
     message: str
-
-@app.get("/", response_class=HTMLResponse)
-async def home(request: Request):
-    """Pagina principale"""
-    return templates.TemplateResponse("index.html", {"request": request})
 
 @app.post("/api/generate", response_model=PasswordResponse)
 async def generate_password(request: GeneratePasswordRequest):
@@ -153,53 +129,6 @@ async def check_breach(request: CheckPasswordRequest):
 async def get_stats():
     """Ottieni statistiche di utilizzo"""
     return password_tool.stats
-
-# Endpoint per form HTML (alternative ai JSON)
-@app.post("/generate-form")
-async def generate_password_form(
-    request: Request,
-    length: int = Form(16),
-    include_symbols: bool = Form(True),
-    exclude_ambiguous: bool = Form(True)
-):
-    """Genera password tramite form HTML"""
-    try:
-        password = password_tool.generate_password(length, include_symbols, exclude_ambiguous)
-        stats = password_tool.check_password_strength(password)
-        
-        return templates.TemplateResponse("result.html", {
-            "request": request,
-            "password": password,
-            "stats": stats,
-            "type": "generate"
-        })
-    except ValueError as e:
-        return templates.TemplateResponse("error.html", {
-            "request": request,
-            "error": str(e)
-        })
-
-@app.post("/check-form")
-async def check_password_form(
-    request: Request,
-    password: str = Form(...)
-):
-    """Controlla password tramite form HTML"""
-    try:
-        stats = password_tool.check_password_strength(password)
-        recommendations = password_tool.get_password_recommendations(stats)
-        
-        return templates.TemplateResponse("result.html", {
-            "request": request,
-            "stats": stats,
-            "recommendations": recommendations,
-            "type": "check"
-        })
-    except ValueError as e:
-        return templates.TemplateResponse("error.html", {
-            "request": request,
-            "error": str(e)
-        })
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8000, reload=True)
