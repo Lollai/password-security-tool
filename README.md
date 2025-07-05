@@ -67,7 +67,7 @@ Uno strumento multilingue per la gestione sicura delle password con:
 - ✅ Nessun salvataggio password - le tue password non vengono mai salvate  
 - ✅ Interfaccia web + CLI - usalo come preferisci  
 
-### 🚀 Demo Live
+### 🚀 Provalo subito
 
 Prova online: [https://your-app-name.onrender.com](https://your-app-name.onrender.com)
 
