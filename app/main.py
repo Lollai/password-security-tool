@@ -1,6 +1,7 @@
-from fastapi import FastAPI, HTTPException
-from fastapi.responses import JSONResponse, HTMLResponse
+from fastapi import FastAPI, Request, Form, HTTPException
+from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
+from fastapi.templating import Jinja2Templates
 from pydantic import BaseModel
 from typing import Optional
 import uvicorn
@@ -18,12 +19,25 @@ app = FastAPI(
     version="1.0.0"
 )
 
+# Mount static files - solo se la directory esiste
+static_paths = ["../static", "static", "./static"]
+for static_path in static_paths:
+    if os.path.exists(static_path):
+        app.mount("/static", StaticFiles(directory=static_path), name="static")
+        break
+
+# Setup templates
+template_paths = ["templates", "./templates", "../templates"]
+templates_dir = "templates"
+for template_path in template_paths:
+    if os.path.exists(template_path):
+        templates_dir = template_path
+        break
+
+templates = Jinja2Templates(directory=templates_dir)
+
 # Initialize password tool
 password_tool = PasswordSecurityTool()
-
-# Serve static files if directory exists
-if os.path.exists("static"):
-    app.mount("/static", StaticFiles(directory="static"), name="static")
 
 # Pydantic models per le API
 class GeneratePasswordRequest(BaseModel):
@@ -55,79 +69,10 @@ class BreachResponse(BaseModel):
     count: Optional[int] = None
     message: str
 
-# NUOVO: Endpoint per servire la pagina HTML principale
 @app.get("/", response_class=HTMLResponse)
-async def serve_frontend():
-    """Serve la pagina HTML principale del Password Security Tool"""
-    
-    # Leggi il file HTML che hai già creato
-    html_file_path = "paste.txt"  # o il percorso del tuo file HTML
-    
-    if os.path.exists(html_file_path):
-        with open(html_file_path, "r", encoding="utf-8") as f:
-            html_content = f.read()
-        
-        # Modifica il contenuto HTML per utilizzare le API FastAPI
-        html_content = html_content.replace(
-            "// Event listeners",
-            """
-        // Configurazione API
-        const API_BASE = window.location.origin + '/api';
-        
-        // Event listeners"""
-        )
-        
-        # Aggiorna le chiamate API nel JavaScript
-        html_content = html_content.replace(
-            """setTimeout(() => {
-                const password = generatePassword(length, symbols, excludeAmbiguous);
-                const strength = calculateStrength(password);
-                updateStats('generate');""",
-            """fetch(`${API_BASE}/generate`, {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({
-                    length: length,
-                    include_symbols: symbols,
-                    exclude_ambiguous: excludeAmbiguous
-                })
-            })
-            .then(response => response.json())
-            .then(data => {
-                updateStats('generate');"""
-        )
-        
-        return HTMLResponse(content=html_content, status_code=200)
-    else:
-        # Fallback: HTML inline semplice
-        return HTMLResponse(content="""
-        <!DOCTYPE html>
-        <html>
-        <head>
-            <title>Password Security Tool</title>
-            <style>
-                body { font-family: Arial, sans-serif; margin: 50px; }
-                .container { max-width: 600px; margin: 0 auto; }
-                h1 { color: #333; }
-                .error { color: red; }
-            </style>
-        </head>
-        <body>
-            <div class="container">
-                <h1>🔐 Password Security Tool</h1>
-                <p>Benvenuto nel Password Security Tool!</p>
-                <p class="error">File HTML non trovato. Crea un file HTML o usa le API direttamente:</p>
-                <ul>
-                    <li><strong>POST /api/generate</strong> - Genera password</li>
-                    <li><strong>POST /api/check</strong> - Analizza password</li>
-                    <li><strong>POST /api/breach</strong> - Controlla breach</li>
-                    <li><strong>GET /api/stats</strong> - Statistiche</li>
-                </ul>
-                <p>Documentazione API disponibile su: <a href="/docs">/docs</a></p>
-            </div>
-        </body>
-        </html>
-        """, status_code=200)
+async def home(request: Request):
+    """Pagina principale"""
+    return templates.TemplateResponse("index.html", {"request": request})
 
 @app.post("/api/generate", response_model=PasswordResponse)
 async def generate_password(request: GeneratePasswordRequest):
@@ -208,6 +153,53 @@ async def check_breach(request: CheckPasswordRequest):
 async def get_stats():
     """Ottieni statistiche di utilizzo"""
     return password_tool.stats
+
+# Endpoint per form HTML (alternative ai JSON)
+@app.post("/generate-form")
+async def generate_password_form(
+    request: Request,
+    length: int = Form(16),
+    include_symbols: bool = Form(True),
+    exclude_ambiguous: bool = Form(True)
+):
+    """Genera password tramite form HTML"""
+    try:
+        password = password_tool.generate_password(length, include_symbols, exclude_ambiguous)
+        stats = password_tool.check_password_strength(password)
+        
+        return templates.TemplateResponse("result.html", {
+            "request": request,
+            "password": password,
+            "stats": stats,
+            "type": "generate"
+        })
+    except ValueError as e:
+        return templates.TemplateResponse("error.html", {
+            "request": request,
+            "error": str(e)
+        })
+
+@app.post("/check-form")
+async def check_password_form(
+    request: Request,
+    password: str = Form(...)
+):
+    """Controlla password tramite form HTML"""
+    try:
+        stats = password_tool.check_password_strength(password)
+        recommendations = password_tool.get_password_recommendations(stats)
+        
+        return templates.TemplateResponse("result.html", {
+            "request": request,
+            "stats": stats,
+            "recommendations": recommendations,
+            "type": "check"
+        })
+    except ValueError as e:
+        return templates.TemplateResponse("error.html", {
+            "request": request,
+            "error": str(e)
+        })
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8000, reload=True)
