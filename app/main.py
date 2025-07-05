@@ -19,11 +19,22 @@ app = FastAPI(
     version="1.0.0"
 )
 
-# Mount static files
-app.mount("/static", StaticFiles(directory="../static"), name="static")
+# Mount static files - solo se la directory esiste
+static_paths = ["../static", "static", "./static"]
+for static_path in static_paths:
+    if os.path.exists(static_path):
+        app.mount("/static", StaticFiles(directory=static_path), name="static")
+        break
 
 # Setup templates
-templates = Jinja2Templates(directory="templates")
+template_paths = ["templates", "./templates", "../templates"]
+templates_dir = "templates"
+for template_path in template_paths:
+    if os.path.exists(template_path):
+        templates_dir = template_path
+        break
+
+templates = Jinja2Templates(directory=templates_dir)
 
 # Initialize password tool
 password_tool = PasswordSecurityTool()
