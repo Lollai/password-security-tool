@@ -1,39 +1,42 @@
-# 🔐 Password Security Tool
+```markdown
 
-[English](#password-security-tool) | [Italiano](#italiano)
+🔐 Password Security Tool
+English | Italiano
 
----
 
-## English
+English
+🎯 What is this?
+A secure, multilingual password management tool offering:
 
-### 🎯 What is this?
+Secure Password Generation: Create strong, unique passwords using cryptographically secure methods.
 
-A secure, multilingual password management tool with:
+Password Strength Analysis: Get detailed feedback and a score on your password's robustness.
 
-- ✅ Secure password generation using cryptographically secure methods  
-- ✅ Password strength analysis with detailed scoring  
-- ✅ Breach checking via HaveIBeenPwned API (safe, uses partial hashes)  
-- ✅ Multilingual support (English & Italian)  
-- ✅ No password storage - your passwords are never saved  
-- ✅ Web interface + CLI - use it however you prefer  
+Breach Checking: Safely verify if your password has been compromised in data breaches via the HaveIBeenPwned API (using partial hashes for privacy).
 
-### 🚀 Live Demo
+Multilingual Support: Seamlessly switch between English and Italian.
 
-Try it online: [https://your-app-name.onrender.com](https://your-app-name.onrender.com)
+No Password Storage: Your privacy is paramount; passwords are never saved or stored.
 
-### 🛠️ Features
+Flexible Interface: Choose between a user-friendly web interface or a command-line interface (CLI).
 
-- **Password Generator:** Create strong, customizable passwords  
-- **Strength Analyzer:** Check password robustness with detailed feedback  
-- **Breach Checker:** Verify if password was compromised in data breaches  
-- **Security First:** Uses `secrets` module, partial SHA-1 hashes, no storage  
-- **Modern UI:** Clean, responsive interface with dark/light themes  
+🚀 Live Demo
+Try it online: https://your-app-name.onrender.com
 
-### 🏃‍♂️ Quick Start
+🛠️ Features
+Password Generator: Craft highly customizable and secure passwords.
 
-```bash
-# Clone repository
-git clone https://github.com/yourusername/password-security-tool.git
+Strength Analyzer: Understand your password's resilience with comprehensive feedback.
+
+Breach Checker: Quickly determine if your credentials might be at risk.
+
+Security First: Built with Python's secrets module and partial SHA-1 hashes for maximum security, ensuring no data retention.
+
+Modern UI: Enjoy a clean, responsive design with convenient dark and light theme options.
+
+🏃‍♂️ Quick Start
+# Clone the repository
+git clone [https://github.com/yourusername/password-security-tool.git](https://github.com/yourusername/password-security-tool.git)
 cd password-security-tool
 
 # Install dependencies
@@ -42,64 +45,69 @@ pip install -r requirements.txt
 # Run locally
 uvicorn app.main:app --reload
 
-### 📚 API Documentation
+📚 API Documentation
+Once the application is running, access the interactive API documentation here: http://localhost:8000/docs
 
-Once running, visit: [http://localhost:8000/docs](http://localhost:8000/docs)
+🔧 Tech Stack
+Backend: FastAPI (Python)
 
-### 🔧 Tech Stack
+Frontend: HTML5, CSS3, JavaScript
 
-- **Backend:** FastAPI (Python)  
-- **Frontend:** HTML5, CSS3, JavaScript  
-- **Security:** HaveIBeenPwned API, SHA-1 partial hashes  
-- **Deployment:** Render, Vercel, Railway compatible  
+Security Integrations: HaveIBeenPwned API, SHA-1 partial hashes
+
+Deployment: Compatible with cloud platforms like Render, Vercel, and Railway.
 
 
-## Italiano
+Italiano
+🎯 Cos'è questo?
+Uno strumento multilingue per la gestione sicura delle password che offre:
 
-### 🎯 Cos'è questo?
+Generazione Password Sicure: Crea password forti e uniche usando metodi crittograficamente sicuri.
 
-Uno strumento multilingue per la gestione sicura delle password con:
+Analisi Robustezza Password: Ottieni un feedback dettagliato e un punteggio sulla robustezza della tua password.
 
-- ✅ Generazione password sicure usando metodi crittograficamente sicuri  
-- ✅ Analisi robustezza password con punteggio dettagliato  
-- ✅ Controllo violazioni tramite API HaveIBeenPwned (sicuro, usa hash parziali)  
-- ✅ Supporto multilingue (Inglese e Italiano)  
-- ✅ Nessun salvataggio password - le tue password non vengono mai salvate  
-- ✅ Interfaccia web + CLI - usalo come preferisci  
+Controllo Violazioni: Verifica in modo sicuro se la tua password è stata compromessa in violazioni di dati tramite l'API HaveIBeenPwned (utilizzando hash parziali per la privacy).
 
-### 🚀 Demo Live
+Supporto Multilingue: Passa facilmente dall'inglese all'italiano.
 
-Prova online: [https://your-app-name.onrender.com](https://your-app-name.onrender.com)
+Nessun Salvataggio Password: La tua privacy è fondamentale; le password non vengono mai salvate o memorizzate.
 
-### 🛠️ Caratteristiche
+Interfaccia Flessibile: Scegli tra una comoda interfaccia web o un'interfaccia a riga di comando (CLI).
 
-- **Generatore Password:** Crea password forti e personalizzabili  
-- **Analizzatore Robustezza:** Controlla la robustezza con feedback dettagliato  
-- **Controllo Violazioni:** Verifica se la password è stata compromessa  
-- **Sicurezza Prima:** Usa modulo `secrets`, hash SHA-1 parziali, nessun salvataggio  
-- **UI Moderna:** Interfaccia pulita e responsive con temi scuro/chiaro  
+🚀 Demo Live
+Provalo online: https://your-app-name.onrender.com
 
-### 🏃‍♂️ Avvio Rapido
+🛠️ Caratteristiche
+Generatore Password: Crea password altamente personalizzabili e sicure.
 
-```bash
+Analizzatore Robustezza: Comprendi la resilienza della tua password con un feedback completo.
+
+Controllo Violazioni: Determina rapidamente se le tue credenziali potrebbero essere a rischio.
+
+Sicurezza al Primo Posto: Costruito con il modulo secrets di Python e hash SHA-1 parziali per la massima sicurezza, garantendo nessuna ritenzione dei dati.
+
+UI Moderna: Goditi un design pulito e responsive con comode opzioni per temi scuro e chiaro.
+
+🏃‍♂️ Avvio Rapido
 # Clona il repository
-git clone https://github.com/yourusername/password-security-tool.git
+git clone [https://github.com/yourusername/password-security-tool.git](https://github.com/yourusername/password-security-tool.git)
 cd password-security-tool
 
-# Installa dipendenze
+# Installa le dipendenze
 pip install -r requirements.txt
 
 # Esegui localmente
 uvicorn app.main:app --reload
 
+📚 Documentazione API
+Una volta avviata l'applicazione, accedi alla documentazione API interattiva qui: http://localhost:8000/docs
 
-### 📚 Documentazione API
+🔧 Tecnologia Utilizzata
+Backend: FastAPI (Python)
 
-Una volta avviato, visita: [http://localhost:8000/docs](http://localhost:8000/docs)
+Frontend: HTML5, CSS3, JavaScript
 
-### 🔧 Tecnologia utilizzata
+Integrazioni di Sicurezza: API HaveIBeenPwned, hash SHA-1 parziali
 
-- **Backend:** FastAPI (Python)  
-- **Frontend:** HTML5, CSS3, JavaScript  
-- **Sicurezza:** API HaveIBeenPwned, hash SHA-1 parziali  
-- **Deploy:** Compatibile con Render, Vercel, Railway  
+Deploy: Compatibile con piattaforme cloud come Render, Vercel e Railway.
+```
