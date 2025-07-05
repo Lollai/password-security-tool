@@ -585,6 +585,9 @@
                 const password = generateMockPassword(data);
                 const strength = calculateStrength(password);
                 
+                // Aggiorna statistiche reali
+                updateStats('generate');
+                
                 document.getElementById('generateResult').innerHTML = `
                     <div class="result">
                         <h3>${t('generated-password')}</h3>
@@ -616,6 +619,9 @@
             // Simulazione API per demo
             setTimeout(() => {
                 const analysis = analyzePassword(password);
+                
+                // Aggiorna statistiche reali
+                updateStats('check');
                 
                 document.getElementById('checkResult').innerHTML = `
                     <div class="result">
@@ -675,6 +681,9 @@
                     (currentLanguage === 'it' ? 'Questa password è stata trovata in data breach!' : 'This password has been found in data breaches!') :
                     (currentLanguage === 'it' ? 'Questa password non è stata trovata in data breach noti.' : 'This password was not found in known data breaches.');
                 
+                // Aggiorna statistiche reali
+                updateStats('breach', isBreached);
+                
                 document.getElementById('breachResult').innerHTML = `
                     <div class="${alertClass}">
                         <h3>${t('verification-result')}</h3>
@@ -685,33 +694,69 @@
             }, 1500);
         });
 
-        // Carica statistiche
+        // Statistiche reali in memoria
+        let realStats = {
+            passwords_generated: 0,
+            passwords_checked: 0,
+            breaches_found: 0,
+            last_used: null,
+            session_start: new Date().toISOString()
+        };
+
+        // Aggiorna statistiche
+        function updateStats(action, found_breach = false) {
+            realStats.last_used = new Date().toISOString();
+            
+            switch(action) {
+                case 'generate':
+                    realStats.passwords_generated++;
+                    break;
+                case 'check':
+                    realStats.passwords_checked++;
+                    break;
+                case 'breach':
+                    if (found_breach) {
+                        realStats.breaches_found++;
+                    }
+                    break;
+            }
+            
+            // Aggiorna display se è attiva la tab stats
+            if (document.getElementById('stats').classList.contains('active')) {
+                loadStats();
+            }
+        }
+
+        // Carica statistiche reali
         async function loadStats() {
-            const stats = {
-                passwords_generated: Math.floor(Math.random() * 1000) + 500,
-                passwords_checked: Math.floor(Math.random() * 800) + 300,
-                breaches_found: Math.floor(Math.random() * 50) + 10,
-                last_used: new Date().toISOString()
-            };
+            const lastUsedDisplay = realStats.last_used ? 
+                new Date(realStats.last_used).toLocaleDateString() : 
+                t('never');
             
             document.getElementById('statsContent').innerHTML = `
                 <div class="stats">
                     <div class="stat-card">
-                        <div class="stat-number">${stats.passwords_generated}</div>
+                        <div class="stat-number">${realStats.passwords_generated}</div>
                         <div class="stat-label">${t('passwords-generated')}</div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-number">${stats.passwords_checked}</div>
+                        <div class="stat-number">${realStats.passwords_checked}</div>
                         <div class="stat-label">${t('passwords-checked')}</div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-number">${stats.breaches_found}</div>
+                        <div class="stat-number">${realStats.breaches_found}</div>
                         <div class="stat-label">${t('breaches-found')}</div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-number">${new Date(stats.last_used).toLocaleDateString()}</div>
+                        <div class="stat-number">${lastUsedDisplay}</div>
                         <div class="stat-label">${t('last-used')}</div>
                     </div>
+                </div>
+                <div style="margin-top: 20px; padding: 15px; background: #f8f9fa; border-radius: 8px; text-align: center; color: #666; font-size: 0.9em;">
+                    ${currentLanguage === 'it' ? 
+                        `Sessione iniziata: ${new Date(realStats.session_start).toLocaleString()}` :
+                        `Session started: ${new Date(realStats.session_start).toLocaleString()}`
+                    }
                 </div>
             `;
         }
