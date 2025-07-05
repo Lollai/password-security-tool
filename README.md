@@ -44,7 +44,7 @@ uvicorn app.main:app --reload
 
 ### 📚 API Documentation
 
-Once running, visit: [http://localhost:8000/docs](http://localhost:8000/docs)
+Once running, visit: [http://localhost:8000/](http://localhost:8000/)
 
 ### 🔧 Tech Stack
 
@@ -95,7 +95,7 @@ uvicorn app.main:app --reload
 
 ### 📚 Documentazione API
 
-Una volta avviato, visita: [http://localhost:8000/docs](http://localhost:8000/docs)
+Una volta avviato, visita: [http://localhost:8000/](http://localhost:8000/)
 
 ### 🔧 Tecnologia utilizzata
 

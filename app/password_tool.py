@@ -476,23 +476,23 @@ def print_password_analysis(stats: PasswordStats):
     print(f"{color} Overall Strength: {stats.strength_label} ({stats.strength_score}/100)")
     
     # Details
-    print(f"\n📊 Password Details:")
-    print(f"   Length: {stats.length} characters")
-    print(f"   Uppercase: {'✅' if stats.has_upper else '❌'}")
-    print(f"   Lowercase: {'✅' if stats.has_lower else '❌'}")
-    print(f"   Numbers: {'✅' if stats.has_digits else '❌'}")
-    print(f"   Symbols: {'✅' if stats.has_special else '❌'}")
-    print(f"   Common password: {'⚠️  Yes' if stats.is_common else '✅ No'}")
+    print(f"\n📊 Password Details:")  # Intestazione sezione dettagli
+    print(f"   Length: {stats.length} characters")  # Mostra lunghezza password
+    print(f"   Uppercase: {'✅' if stats.has_upper else '❌'}")  # Presenza maiuscole
+    print(f"   Lowercase: {'✅' if stats.has_lower else '❌'}")  # Presenza minuscole
+    print(f"   Numbers: {'✅' if stats.has_digits else '❌'}")  # Presenza numeri
+    print(f"   Symbols: {'✅' if stats.has_special else '❌'}")  # Presenza simboli
+    print(f"   Common password: {'⚠️  Yes' if stats.is_common else '✅ No'}")  # Se è password comune
     
-    # Recommendations
+    # Recommendations - Genera e mostra suggerimenti per migliorare la password
     recommendations = PasswordSecurityTool().get_password_recommendations(stats)
-    if recommendations:
-        print(f"\n💡 Recommendations:")
-        for rec in recommendations:
+    if recommendations:  # Se ci sono raccomandazioni
+        print(f"\n💡 Recommendations:")  # Intestazione raccomandazioni
+        for rec in recommendations:  # Stampa ogni raccomandazione
             print(f"   {rec}")
     
-    print("-"*50)
+    print("-"*50)  # Linea di separazione finale
 
 if __name__ == "__main__":
-    main()
+    main()  # Punto di ingresso principale
 
