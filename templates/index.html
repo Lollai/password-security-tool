@@ -32,33 +32,6 @@
             text-align: center;
             position: relative;
         }
-        .language-switcher {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            display: flex;
-            gap: 10px;
-        }
-        .lang-btn {
-            background: rgba(255,255,255,0.2);
-            border: 2px solid rgba(255,255,255,0.3);
-            color: white;
-            padding: 8px 15px;
-            border-radius: 25px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 0.9em;
-            font-weight: 600;
-        }
-        .lang-btn:hover {
-            background: rgba(255,255,255,0.3);
-            transform: translateY(-2px);
-        }
-        .lang-btn.active {
-            background: white;
-            color: #4facfe;
-            border-color: white;
-        }
         .tabs {
             display: flex;
             background: #f8f9fa;
@@ -198,71 +171,67 @@
 <body class="flex items-center justify-center min-h-screen p-5 bg-gradient-to-br from-indigo-500 to-purple-700">
     <div class="container rounded-xl shadow-2xl">
         <div class="header">
-            <div class="language-switcher">
-                <button class="lang-btn active" data-lang="it">IT</button>
-                <button class="lang-btn" data-lang="en">EN</button>
-            </div>
-            <h1 class="text-4xl font-extrabold mb-2" data-lang-key="headerTitle">🔐 Strumento di Sicurezza Password</h1>
-            <p class="text-lg opacity-90" data-lang-key="headerSubtitle">Genera, analizza e controlla le tue password.</p>
+            <h1 class="text-4xl font-extrabold mb-2">🔐 Strumento di Sicurezza Password</h1>
+            <p class="text-lg opacity-90">Genera, analizza e controlla le tue password.</p>
         </div>
 
         <div class="tabs flex bg-gray-50 border-b border-gray-200">
-            <button class="tab active flex-1 py-5 px-4 text-center cursor-pointer transition-all duration-300 font-semibold text-gray-700 hover:bg-gray-100 border-b-2 border-transparent" data-tab="generate" data-lang-key="tabGenerate">Genera Password</button>
-            <button class="tab flex-1 py-5 px-4 text-center cursor-pointer transition-all duration-300 font-semibold text-gray-700 hover:bg-gray-100 border-b-2 border-transparent" data-tab="check-strength" data-lang-key="tabCheckStrength">Controlla Forza</button>
-            <button class="tab flex-1 py-5 px-4 text-center cursor-pointer transition-all duration-300 font-semibold text-gray-700 hover:bg-gray-100 border-b-2 border-transparent" data-tab="check-breach" data-lang-key="tabCheckBreach">Controlla Violazioni</button>
+            <button class="tab active flex-1 py-5 px-4 text-center cursor-pointer transition-all duration-300 font-semibold text-gray-700 hover:bg-gray-100 border-b-2 border-transparent" data-tab="generate">Genera Password</button>
+            <button class="tab flex-1 py-5 px-4 text-center cursor-pointer transition-all duration-300 font-semibold text-gray-700 hover:bg-gray-100 border-b-2 border-transparent" data-tab="check-strength">Controlla Forza</button>
+            <button class="tab flex-1 py-5 px-4 text-center cursor-pointer transition-all duration-300 font-semibold text-gray-700 hover:bg-gray-100 border-b-2 border-transparent" data-tab="check-breach">Controlla Violazioni</button>
         </div>
 
         <div id="generate" class="tab-content active p-10 bg-white">
-            <h2 class="text-2xl font-bold mb-6 text-gray-800" data-lang-key="generateTitle">Genera una Password Sicura</h2>
+            <h2 class="text-2xl font-bold mb-6 text-gray-800">Genera una Password Sicura</h2>
             <div class="form-group mb-5">
-                <label for="genLength" class="block text-gray-700 font-semibold mb-2" data-lang-key="genLengthLabel">Lunghezza Password (8-128):</label>
+                <label for="genLength" class="block text-gray-700 font-semibold mb-2">Lunghezza Password (8-128):</label>
                 <input type="number" id="genLength" value="16" min="8" max="128" class="w-full p-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:ring-blue-500">
             </div>
             <div class="checkbox-group flex items-center mb-4">
                 <input type="checkbox" id="genSymbols" checked class="mr-2 transform scale-125 text-blue-600 rounded focus:ring-blue-500">
-                <label for="genSymbols" class="text-gray-700" data-lang-key="genSymbolsLabel">Includi Simboli (!@#$%)</label>
+                <label for="genSymbols" class="text-gray-700">Includi Simboli (!@#$%)</label>
             </div>
             <div class="checkbox-group flex items-center mb-6">
                 <input type="checkbox" id="genAmbiguous" checked class="mr-2 transform scale-125 text-blue-600 rounded focus:ring-blue-500">
-                <label for="genAmbiguous" class="text-gray-700" data-lang-key="genAmbiguousLabel">Escludi Caratteri Ambigui (0, O, 1, l, I, |)</label>
+                <label for="genAmbiguous" class="text-gray-700">Escludi Caratteri Ambigui (0, O, 1, l, I, |)</label>
             </div>
-            <button id="generateBtn" class="btn flex items-center justify-center" data-lang-key="generateBtn">
+            <button id="generateBtn" class="btn flex items-center justify-center">
                 Genera Password
                 <span id="generateSpinner" class="loading-spinner hidden"></span>
             </button>
             <div id="generateResult" class="result mt-8 p-5 bg-blue-50 border-l-4 border-blue-400 rounded-lg text-gray-800">
-                <p class="font-semibold text-lg mb-2" data-lang-key="genResultTitle">La tua password generata apparirà qui:</p>
+                <p class="font-semibold text-lg mb-2">La tua password generata apparirà qui:</p>
                 <div class="password-result relative">
                     <span id="generatedPasswordText"></span>
-                    <button class="copy-btn" onclick="copyToClipboard('generatedPasswordText')" data-lang-key="copyBtn">Copia</button>
+                    <button class="copy-btn" onclick="copyToClipboard('generatedPasswordText')">Copia</button>
                 </div>
-                <p class="mt-4 text-sm" data-lang-key="strengthLabelPrefix">Forza: <span id="generatedPasswordStrength"></span></p>
+                <p class="mt-4 text-sm">Forza: <span id="generatedPasswordStrength"></span></p>
             </div>
         </div>
 
         <div id="check-strength" class="tab-content p-10 bg-white">
-            <h2 class="text-2xl font-bold mb-6 text-gray-800" data-lang-key="checkStrengthTitle">Controlla la Forza della Password</h2>
+            <h2 class="text-2xl font-bold mb-6 text-gray-800">Controlla la Forza della Password</h2>
             <div class="form-group mb-5">
-                <label for="checkPassword" class="block text-gray-700 font-semibold mb-2" data-lang-key="checkPasswordLabel">Inserisci la password da controllare:</label>
+                <label for="checkPassword" class="block text-gray-700 font-semibold mb-2">Inserisci la password da controllare:</label>
                 <input type="password" id="checkPassword" placeholder="La tua password" class="w-full p-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:ring-blue-500">
             </div>
-            <button id="checkStrengthBtn" class="btn flex items-center justify-center" data-lang-key="checkStrengthBtn">
+            <button id="checkStrengthBtn" class="btn flex items-center justify-center">
                 Controlla Forza
                 <span id="checkStrengthSpinner" class="loading-spinner hidden"></span>
             </button>
             <div id="checkStrengthResult" class="result mt-8 p-5 bg-green-50 border-l-4 border-green-400 rounded-lg text-gray-800">
-                <h3 class="font-bold text-xl mb-3" data-lang-key="analysisResultsTitle">Risultati Analisi:</h3>
-                <p data-lang-key="overallStrength">Forza complessiva: <span id="strengthLabel" class="font-semibold"></span> (<span id="strengthScore"></span>/100)</p>
+                <h3 class="font-bold text-xl mb-3">Risultati Analisi:</h3>
+                <p>Forza complessiva: <span id="strengthLabel" class="font-semibold"></span> (<span id="strengthScore"></span>/100)</p>
                 <div class="strength-bar-container">
                     <div id="strengthProgressBar" class="strength-bar" style="width: 0%;"></div>
                 </div>
-                <p class="mt-4"><span data-lang-key="lengthDetail">Lunghezza:</span> <span id="detailLength"></span> caratteri</p>
-                <p><span data-lang-key="uppercaseDetail">Maiuscole:</span> <span id="detailUpper"></span></p>
-                <p><span data-lang-key="lowercaseDetail">Minuscole:</span> <span id="detailLower"></span></p>
-                <p><span data-lang-key="numbersDetail">Numeri:</span> <span id="detailDigits"></span></p>
-                <p><span data-lang-key="symbolsDetail">Simboli:</span> <span id="detailSpecial"></span></p>
-                <p><span data-lang-key="commonPasswordDetail">Password comune:</span> <span id="detailCommon"></span></p>
-                <h4 class="font-bold text-lg mt-5 mb-2" data-lang-key="recommendationsTitle">Raccomandazioni:</h4>
+                <p class="mt-4">Lunghezza: <span id="detailLength"></span> caratteri</p>
+                <p>Maiuscole: <span id="detailUpper"></span></p>
+                <p>Minuscole: <span id="detailLower"></span></p>
+                <p>Numeri: <span id="detailDigits"></span></p>
+                <p>Simboli: <span id="detailSpecial"></span></p>
+                <p>Password comune: <span id="detailCommon"></span></p>
+                <h4 class="font-bold text-lg mt-5 mb-2">Raccomandazioni:</h4>
                 <ul id="recommendationsList" class="list-disc pl-5">
                     <!-- Recommendations will be loaded here -->
                 </ul>
@@ -270,12 +239,12 @@
         </div>
 
         <div id="check-breach" class="tab-content p-10 bg-white">
-            <h2 class="text-2xl font-bold mb-6 text-gray-800" data-lang-key="checkBreachTitle">Controlla Violazioni di Dati</h2>
+            <h2 class="text-2xl font-bold mb-6 text-gray-800">Controlla Violazioni di Dati</h2>
             <div class="form-group mb-5">
-                <label for="breachPassword" class="block text-gray-700 font-semibold mb-2" data-lang-key="breachPasswordLabel">Inserisci la password da controllare:</label>
+                <label for="breachPassword" class="block text-gray-700 font-semibold mb-2">Inserisci la password da controllare:</label>
                 <input type="password" id="breachPassword" placeholder="La tua password" class="w-full p-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:ring-blue-500">
             </div>
-            <button id="checkBreachBtn" class="btn flex items-center justify-center" data-lang-key="checkBreachBtn">
+            <button id="checkBreachBtn" class="btn flex items-center justify-center">
                 Controlla Password
                 <span id="checkBreachSpinner" class="loading-spinner hidden"></span>
             </button>
@@ -286,95 +255,6 @@
     </div>
 
     <script>
-        const translations = {
-            it: {
-                headerTitle: "🔐 Strumento di Sicurezza Password",
-                headerSubtitle: "Genera, analizza e controlla le tue password.",
-                tabGenerate: "Genera Password",
-                tabCheckStrength: "Controlla Forza",
-                tabCheckBreach: "Controlla Violazioni",
-                generateTitle: "Genera una Password Sicura",
-                genLengthLabel: "Lunghezza Password (8-128):",
-                genSymbolsLabel: "Includi Simboli (!@#$%)",
-                genAmbiguousLabel: "Escludi Caratteri Ambigui (0, O, 1, l, I, |)",
-                generateBtn: "Genera Password",
-                genResultTitle: "La tua password generata apparirà qui:",
-                copyBtn: "Copia",
-                strengthLabelPrefix: "Forza:",
-                checkStrengthTitle: "Controlla la Forza della Password",
-                checkPasswordLabel: "Inserisci la password da controllare:",
-                checkStrengthBtn: "Controlla Forza",
-                analysisResultsTitle: "Risultati Analisi:",
-                overallStrength: "Forza complessiva:",
-                lengthDetail: "Lunghezza:",
-                uppercaseDetail: "Maiuscole:",
-                lowercaseDetail: "Minuscole:",
-                numbersDetail: "Numeri:",
-                symbolsDetail: "Simboli:",
-                commonPasswordDetail: "Password comune:",
-                recommendationsTitle: "Raccomandazioni:",
-                excellentPassword: "🎉 Ottimo! Questa password soddisfa tutti i criteri di sicurezza.",
-                checkBreachTitle: "Controlla Violazioni di Dati",
-                breachPasswordLabel: "Inserisci la password da controllare:",
-                checkBreachBtn: "Controlla Password",
-                breachWarning: (count) => `⚠️ ATTENZIONE: Password trovata in ${count.toLocaleString()} violazioni di dati!`,
-                breachNotFound: "✅ Ottime notizie! Password non trovata in violazioni note.",
-                breachApiError: "❓ Impossibile controllare (API non disponibile)",
-                alertCopied: "Password copiata negli appunti!",
-                alertEnterPasswordCheck: "Inserisci una password da controllare.",
-                alertEnterPasswordBreach: "Inserisci una password da controllare per le violazioni.",
-                alertGenError: (detail) => `Errore nella generazione: ${detail || 'Errore sconosciuto'}`,
-                alertCheckError: (detail) => `Errore nell'analisi: ${detail || 'Errore sconosciuto'}`,
-                alertConnectionError: "Errore di connessione al server. Assicurati che il backend sia in esecuzione.",
-                yes: "Sì",
-                no: "No"
-            },
-            en: {
-                headerTitle: "🔐 Password Security Tool",
-                headerSubtitle: "Generate, analyze, and check your passwords.",
-                tabGenerate: "Generate Password",
-                tabCheckStrength: "Check Strength",
-                tabCheckBreach: "Check Breaches",
-                generateTitle: "Generate a Secure Password",
-                genLengthLabel: "Password Length (8-128):",
-                genSymbolsLabel: "Include Symbols (!@#$%)",
-                genAmbiguousLabel: "Exclude Ambiguous Chars (0, O, 1, l, I, |)",
-                generateBtn: "Generate Password",
-                genResultTitle: "Your generated password will appear here:",
-                copyBtn: "Copy",
-                strengthLabelPrefix: "Strength:",
-                checkStrengthTitle: "Check Password Strength",
-                checkPasswordLabel: "Enter password to check:",
-                checkStrengthBtn: "Check Strength",
-                analysisResultsTitle: "Analysis Results:",
-                overallStrength: "Overall Strength:",
-                lengthDetail: "Length:",
-                uppercaseDetail: "Uppercase:",
-                lowercaseDetail: "Lowercase:",
-                numbersDetail: "Numbers:",
-                symbolsDetail: "Symbols:",
-                commonPasswordDetail: "Common password:",
-                recommendationsTitle: "Recommendations:",
-                excellentPassword: "🎉 Excellent! This password meets all security criteria.",
-                checkBreachTitle: "Check Data Breaches",
-                breachPasswordLabel: "Enter password to check:",
-                checkBreachBtn: "Check Password",
-                breachWarning: (count) => `⚠️ WARNING: Password found in ${count.toLocaleString()} data breaches!`,
-                breachNotFound: "✅ Good news! Password not found in known breaches.",
-                breachApiError: "❓ Could not check (API unavailable)",
-                alertCopied: "Password copied to clipboard!",
-                alertEnterPasswordCheck: "Please enter a password to check.",
-                alertEnterPasswordBreach: "Please enter a password to check for breaches.",
-                alertGenError: (detail) => `Generation error: ${detail || 'Unknown error'}`,
-                alertCheckError: (detail) => `Analysis error: ${detail || 'Unknown error'}`,
-                alertConnectionError: "Connection error to server. Ensure backend is running.",
-                yes: "Yes",
-                no: "No"
-            }
-        };
-
-        let currentLanguage = 'it'; // Default language
-
         // Funzione per copiare negli appunti
         function copyToClipboard(elementId) {
             const element = document.getElementById(elementId);
@@ -386,96 +266,13 @@
                 textarea.select();
                 try {
                     document.execCommand('copy');
-                    alert(translations[currentLanguage].alertCopied);
+                    alert('Password copiata negli appunti!'); // Sostituire con un modal più elegante in un'app reale
                 } catch (err) {
                     console.error('Impossibile copiare: ', err);
                 }
                 document.body.removeChild(textarea);
             }
         }
-
-        // Funzione per aggiornare la lingua dell'interfaccia
-        function updateLanguage(lang) {
-            currentLanguage = lang;
-            document.querySelectorAll('[data-lang-key]').forEach(element => {
-                const key = element.dataset.langKey;
-                if (translations[lang][key]) {
-                    // Special handling for elements that might contain dynamic content or need innerHTML
-                    if (element.tagName === 'BUTTON' || element.tagName === 'LABEL' || element.tagName === 'H1' || element.tagName === 'H2' || element.tagName === 'H3' || element.tagName === 'P' || element.tagName === 'SPAN') {
-                        element.innerText = translations[lang][key];
-                    }
-                }
-            });
-
-            // Update active language button
-            document.querySelectorAll('.lang-btn').forEach(btn => {
-                if (btn.dataset.lang === lang) {
-                    btn.classList.add('active');
-                } else {
-                    btn.classList.remove('active');
-                }
-            });
-
-            // Re-render any dynamic content that depends on language, e.g., strength details
-            // This is important if a result is already displayed when language changes
-            if (checkStrengthResultDiv.style.display === 'block') {
-                updateStrengthDetails(currentLanguage);
-            }
-            if (breachResultDiv.style.display === 'block') {
-                 // Re-evaluate breach message to update its text
-                const currentBreachMessage = breachMessageP.dataset.originalMessage; // Store original message type
-                if (currentBreachMessage) {
-                    if (currentBreachMessage === 'breached') {
-                        const count = parseInt(breachMessageP.dataset.breachCount);
-                        breachMessageP.innerText = translations[currentLanguage].breachWarning(count);
-                    } else if (currentBreachMessage === 'not_breached') {
-                        breachMessageP.innerText = translations[currentLanguage].breachNotFound;
-                    } else if (currentBreachMessage === 'api_error') {
-                        breachMessageP.innerText = translations[currentLanguage].breachApiError;
-                    }
-                }
-            }
-        }
-
-        // Helper function to update strength details (used for initial display and language change)
-        function updateStrengthDetails(lang) {
-            const stats = checkStrengthResultDiv.dataset.stats ? JSON.parse(checkStrengthResultDiv.dataset.stats) : null;
-            const recommendations = checkStrengthResultDiv.dataset.recommendations ? JSON.parse(checkStrengthResultDiv.dataset.recommendations) : null;
-
-            if (stats) {
-                strengthLabelSpan.innerText = stats.strength_label;
-                strengthScoreSpan.innerText = stats.strength_score;
-
-                strengthProgressBar.style.width = `${stats.strength_score}%`;
-                strengthProgressBar.className = 'strength-bar';
-                if (stats.strength_label === 'Very Weak') strengthProgressBar.classList.add('very-weak');
-                else if (stats.strength_label === 'Weak') strengthProgressBar.classList.add('weak');
-                else if (stats.strength_label === 'Moderate') strengthProgressBar.classList.add('moderate');
-                else if (stats.strength_label === 'Strong') strengthProgressBar.classList.add('strong');
-                else if (stats.strength_label === 'Very Strong') strengthProgressBar.classList.add('very-strong');
-
-                detailLengthSpan.innerText = stats.length;
-                detailUpperSpan.innerHTML = stats.has_upper ? `✅ ${translations[lang].yes}` : `❌ ${translations[lang].no}`;
-                detailLowerSpan.innerHTML = stats.has_lower ? `✅ ${translations[lang].yes}` : `❌ ${translations[lang].no}`;
-                detailDigitsSpan.innerHTML = stats.has_digits ? `✅ ${translations[lang].yes}` : `❌ ${translations[lang].no}`;
-                detailSpecialSpan.innerHTML = stats.has_special ? `✅ ${translations[lang].yes}` : `❌ ${translations[lang].no}`;
-                detailCommonSpan.innerHTML = stats.is_common ? `⚠️ ${translations[lang].yes}` : `✅ ${translations[lang].no}`;
-
-                recommendationsList.innerHTML = '';
-                if (recommendations && recommendations.length > 0) {
-                    recommendations.forEach(rec => {
-                        const li = document.createElement('li');
-                        li.innerText = rec;
-                        recommendationsList.appendChild(li);
-                    });
-                } else {
-                    const li = document.createElement('li');
-                    li.innerText = translations[lang].excellentPassword;
-                    recommendationsList.appendChild(li);
-                }
-            }
-        }
-
 
         // Gestione delle schede
         const tabs = document.querySelectorAll('.tab');
@@ -529,11 +326,11 @@
                     generatedPasswordStrength.innerText = `${data.strength_label} (${data.strength_score}/100)`;
                     generateResultDiv.style.display = 'block';
                 } else {
-                    alert(translations[currentLanguage].alertGenError(data.detail));
+                    alert(`Errore nella generazione: ${data.detail || 'Errore sconosciuto'}`);
                 }
             } catch (error) {
                 console.error('Errore di rete o parsing:', error);
-                alert(translations[currentLanguage].alertConnectionError);
+                alert('Errore di connessione al server. Assicurati che il backend sia in esecuzione.');
             } finally {
                 toggleSpinner('generateSpinner', false);
             }
@@ -559,7 +356,7 @@
         checkStrengthBtn.addEventListener('click', async () => {
             const password = checkPasswordInput.value;
             if (!password) {
-                alert(translations[currentLanguage].alertEnterPasswordCheck);
+                alert('Inserisci una password da controllare.');
                 return;
             }
 
@@ -576,17 +373,45 @@
                 const data = await response.json();
 
                 if (response.ok) {
-                    // Store data in dataset for language switching
-                    checkStrengthResultDiv.dataset.stats = JSON.stringify(data.stats);
-                    checkStrengthResultDiv.dataset.recommendations = JSON.stringify(data.recommendations);
-                    updateStrengthDetails(currentLanguage);
+                    const stats = data.stats;
+                    strengthLabelSpan.innerText = stats.strength_label;
+                    strengthScoreSpan.innerText = stats.strength_score;
+
+                    // Aggiorna la barra di progresso e il colore
+                    strengthProgressBar.style.width = `${stats.strength_score}%`;
+                    strengthProgressBar.className = 'strength-bar'; // Reset classes
+                    if (stats.strength_label === 'Very Weak') strengthProgressBar.classList.add('very-weak');
+                    else if (stats.strength_label === 'Weak') strengthProgressBar.classList.add('weak');
+                    else if (stats.strength_label === 'Moderate') strengthProgressBar.classList.add('moderate');
+                    else if (stats.strength_label === 'Strong') strengthProgressBar.classList.add('strong');
+                    else if (stats.strength_label === 'Very Strong') strengthProgressBar.classList.add('very-strong');
+
+                    detailLengthSpan.innerText = stats.length;
+                    detailUpperSpan.innerHTML = stats.has_upper ? '✅ Sì' : '❌ No';
+                    detailLowerSpan.innerHTML = stats.has_lower ? '✅ Sì' : '❌ No';
+                    detailDigitsSpan.innerHTML = stats.has_digits ? '✅ Sì' : '❌ No';
+                    detailSpecialSpan.innerHTML = stats.has_special ? '✅ Sì' : '❌ No';
+                    detailCommonSpan.innerHTML = stats.is_common ? '⚠️ Sì' : '✅ No';
+
+                    recommendationsList.innerHTML = '';
+                    if (data.recommendations && data.recommendations.length > 0) {
+                        data.recommendations.forEach(rec => {
+                            const li = document.createElement('li');
+                            li.innerText = rec;
+                            recommendationsList.appendChild(li);
+                        });
+                    } else {
+                        const li = document.createElement('li');
+                        li.innerText = '🎉 Ottimo! Questa password soddisfa tutti i criteri di sicurezza.';
+                        recommendationsList.appendChild(li);
+                    }
                     checkStrengthResultDiv.style.display = 'block';
                 } else {
-                    alert(translations[currentLanguage].alertCheckError(data.detail));
+                    alert(`Errore nell'analisi: ${data.detail || 'Errore sconosciuto'}`);
                 }
             } catch (error) {
                 console.error('Errore di rete o parsing:', error);
-                alert(translations[currentLanguage].alertConnectionError);
+                alert('Errore di connessione al server. Assicurati che il backend sia in esecuzione.');
             } finally {
                 toggleSpinner('checkStrengthSpinner', false);
             }
@@ -603,7 +428,7 @@
         checkBreachBtn.addEventListener('click', async () => {
             const password = breachPasswordInput.value;
             if (!password) {
-                alert(translations[currentLanguage].alertEnterPasswordBreach);
+                alert('Inserisci una password da controllare per le violazioni.');
                 return;
             }
 
@@ -622,22 +447,12 @@
 
                 if (response.ok) {
                     breachMessageP.innerText = data.message;
-                    breachMessageP.dataset.originalMessage = ''; // Reset original message type
-                    breachMessageP.dataset.breachCount = ''; // Reset breach count
-
                     if (data.is_breached) {
                         breachResultDiv.classList.add('bg-red-50', 'border-red-400');
-                        breachMessageP.innerText = translations[currentLanguage].breachWarning(data.count);
-                        breachMessageP.dataset.originalMessage = 'breached';
-                        breachMessageP.dataset.breachCount = data.count;
                     } else if (data.count === 0) {
                         breachResultDiv.classList.add('bg-green-50', 'border-green-400');
-                        breachMessageP.innerText = translations[currentLanguage].breachNotFound;
-                        breachMessageP.dataset.originalMessage = 'not_breached';
                     } else { // Questo caso dovrebbe catturare il "count is None" dal backend
                         breachResultDiv.classList.add('bg-yellow-50', 'border-yellow-400');
-                        breachMessageP.innerText = translations[currentLanguage].breachApiError;
-                        breachMessageP.dataset.originalMessage = 'api_error';
                     }
                     breachResultDiv.style.display = 'block';
                 } else {
@@ -648,7 +463,7 @@
                 }
             } catch (error) {
                 console.error('Errore di rete o parsing:', error);
-                breachMessageP.innerText = translations[currentLanguage].alertConnectionError;
+                breachMessageP.innerText = 'Errore di connessione al server. Assicurati che il backend sia in esecuzione.';
                 breachResultDiv.classList.add('bg-red-50', 'border-red-400');
                 breachResultDiv.style.display = 'block';
             } finally {
@@ -656,17 +471,9 @@
             }
         });
 
-        // Add event listeners for language buttons
-        document.querySelectorAll('.lang-btn').forEach(button => {
-            button.addEventListener('click', () => {
-                updateLanguage(button.dataset.lang);
-            });
-        });
-
-        // Attiva la prima scheda e imposta la lingua all'avvio
+        // Attiva la prima scheda all'avvio
         document.addEventListener('DOMContentLoaded', () => {
-            updateLanguage(currentLanguage); // Set initial language
-            document.querySelector('.tab').click(); // Activate first tab
+            document.querySelector('.tab').click();
         });
     </script>
 </body>
