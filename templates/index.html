@@ -142,45 +142,101 @@
     </div>
 
     <script>
-        let lang = 'it';
-        let translations = {};
-
-        // Load translations from JSON files
-        async function loadTranslations() {
-            try {
-                const [itResponse, enResponse] = await Promise.all([
-                    fetch('./translations/it.json'),
-                    fetch('./translations/en.json')
-                ]);
-                
-                translations.it = await itResponse.json();
-                translations.en = await enResponse.json();
-                
-                // Initialize with current language
-                translate(lang);
-            } catch (error) {
-                console.error('Error loading translations:', error);
-                // Fallback to basic functionality if translations fail
+        // Translations
+        const t = {
+            it: {
+                title: '🔐 Strumento di Sicurezza Password',
+                subtitle: 'Genera, analizza e controlla le tue password.',
+                'tab-gen': 'Genera Password',
+                'tab-str': 'Controlla Forza',
+                'tab-bre': 'Controlla Violazioni',
+                'gen-title': 'Genera una Password Sicura',
+                'gen-length': 'Lunghezza (8-128):',
+                'gen-symbols': 'Includi Simboli (!@#$%)',
+                'gen-ambiguous': 'Escludi Caratteri Ambigui (0, O, 1, l, I, |)',
+                'gen-btn': 'Genera Password',
+                'gen-result': 'Password generata:',
+                copy: 'Copia',
+                strength: 'Forza:',
+                'str-title': 'Controlla la Forza della Password',
+                'str-label': 'Inserisci password:',
+                password: 'La tua password',
+                'str-btn': 'Controlla Forza',
+                'str-results': 'Risultati:',
+                'str-overall': 'Forza:',
+                'str-len': 'Lunghezza:',
+                'str-upper': 'Maiuscole:',
+                'str-lower': 'Minuscole:',
+                'str-digits': 'Numeri:',
+                'str-special': 'Simboli:',
+                'str-common': 'Password comune:',
+                'str-rec': 'Raccomandazioni:',
+                'bre-title': 'Controlla Violazioni',
+                'bre-label': 'Inserisci password:',
+                'bre-btn': 'Controlla Password',
+                'copy-success': 'Copiato!',
+                'enter-password': 'Inserisci una password',
+                'network-error': 'Errore di rete',
+                'yes': '✅ Sì',
+                'no': '❌ No',
+                'warning-yes': '⚠️ Sì',
+                'breach-safe': 'Password sicura - non trovata in violazioni',
+                'breach-found': 'Password trovata in {count} violazioni. Cambiala!'
+            },
+            en: {
+                title: '🔐 Password Security Tool',
+                subtitle: 'Generate, analyze and check your passwords.',
+                'tab-gen': 'Generate Password',
+                'tab-str': 'Check Strength',
+                'tab-bre': 'Check Breaches',
+                'gen-title': 'Generate a Secure Password',
+                'gen-length': 'Length (8-128):',
+                'gen-symbols': 'Include Symbols (!@#$%)',
+                'gen-ambiguous': 'Exclude Ambiguous Characters (0, O, 1, l, I, |)',
+                'gen-btn': 'Generate Password',
+                'gen-result': 'Generated password:',
+                copy: 'Copy',
+                strength: 'Strength:',
+                'str-title': 'Check Password Strength',
+                'str-label': 'Enter password:',
+                password: 'Your password',
+                'str-btn': 'Check Strength',
+                'str-results': 'Results:',
+                'str-overall': 'Strength:',
+                'str-len': 'Length:',
+                'str-upper': 'Uppercase:',
+                'str-lower': 'Lowercase:',
+                'str-digits': 'Numbers:',
+                'str-special': 'Symbols:',
+                'str-common': 'Common password:',
+                'str-rec': 'Recommendations:',
+                'bre-title': 'Check Breaches',
+                'bre-label': 'Enter password:',
+                'bre-btn': 'Check Password',
+                'copy-success': 'Copied!',
+                'enter-password': 'Enter a password',
+                'network-error': 'Network error',
+                'yes': '✅ Yes',
+                'no': '❌ No',
+                'warning-yes': '⚠️ Yes',
+                'breach-safe': 'Password safe - not found in breaches',
+                'breach-found': 'Password found in {count} breaches. Change it!'
             }
-        }
+        };
+
+        let lang = 'it';
 
         // Translation function
         function translate(l) {
-            if (!translations[l]) return;
-            
-            const t = translations[l];
-            
             document.querySelectorAll('[data-t]').forEach(el => {
                 const key = el.getAttribute('data-t');
-                if (t[key]) el.textContent = t[key];
+                if (t[l][key]) el.textContent = t[l][key];
             });
-            
             document.querySelectorAll('[data-t-placeholder]').forEach(el => {
                 const key = el.getAttribute('data-t-placeholder');
-                if (t[key]) el.placeholder = t[key];
+                if (t[l][key]) el.placeholder = t[l][key];
             });
-            
-            if (t.title) document.title = t.title;
+            document.title = t[l].title;
         }
 
         // Language toggle
@@ -203,8 +259,7 @@
         function copyText(id) {
             const text = document.getElementById(id).textContent;
             navigator.clipboard.writeText(text).then(() => {
-                const t = translations[lang];
-                alert(t && t['copy-success'] ? t['copy-success'] : 'Copiato!');
+                alert(t[lang]['copy-success']);
             });
         }
 
@@ -231,8 +286,7 @@
                     throw new Error(responseData.detail || 'Unknown error');
                 }
             } catch (error) {
-                const t = translations[lang];
-                alert(t && t['network-error'] ? t['network-error'] : 'Errore di rete');
+                alert(t[lang]['network-error']);
                 throw error;
             } finally {
                 spinner.classList.add('hidden');
@@ -264,15 +318,13 @@
         document.getElementById('strBtn').addEventListener('click', async () => {
             const password = document.getElementById('strPassword').value;
             if (!password) {
-                const t = translations[lang];
-                alert(t && t['enter-password'] ? t['enter-password'] : 'Inserisci una password');
+                alert(t[lang]['enter-password']);
                 return;
             }
             
             try {
                 const data = await apiCall('check', { password }, 'strSpinner', 'strResult');
                 const stats = data.stats;
-                const t = translations[lang];
                 
                 document.getElementById('strLabel').textContent = stats.strength_label;
                 document.getElementById('strScore').textContent = stats.strength_score;
@@ -282,11 +334,11 @@
                 bar.className = `strength-bar h-full rounded-full strength-${stats.strength_label.toLowerCase().replace(' ', '-')}`;
                 
                 document.getElementById('strLen').textContent = stats.length;
-                document.getElementById('strUpper').innerHTML = stats.has_upper ? (t?.yes || '✅ Sì') : (t?.no || '❌ No');
-                document.getElementById('strLower').innerHTML = stats.has_lower ? (t?.yes || '✅ Sì') : (t?.no || '❌ No');
-                document.getElementById('strDigits').innerHTML = stats.has_digits ? (t?.yes || '✅ Sì') : (t?.no || '❌ No');
-                document.getElementById('strSpecial').innerHTML = stats.has_special ? (t?.yes || '✅ Sì') : (t?.no || '❌ No');
-                document.getElementById('strCommon').innerHTML = stats.is_common ? (t?.['warning-yes'] || '⚠️ Sì') : (t?.no || '❌ No');
+                document.getElementById('strUpper').innerHTML = stats.has_upper ? t[lang]['yes'] : t[lang]['no'];
+                document.getElementById('strLower').innerHTML = stats.has_lower ? t[lang]['yes'] : t[lang]['no'];
+                document.getElementById('strDigits').innerHTML = stats.has_digits ? t[lang]['yes'] : t[lang]['no'];
+                document.getElementById('strSpecial').innerHTML = stats.has_special ? t[lang]['yes'] : t[lang]['no'];
+                document.getElementById('strCommon').innerHTML = stats.is_common ? t[lang]['warning-yes'] : t[lang]['no'];
                 
                 const recList = document.getElementById('strRecommendations');
                 recList.innerHTML = '';
@@ -306,8 +358,7 @@
         document.getElementById('breBtn').addEventListener('click', async () => {
             const password = document.getElementById('brePassword').value;
             if (!password) {
-                const t = translations[lang];
-                alert(t && t['enter-password'] ? t['enter-password'] : 'Inserisci una password');
+                alert(t[lang]['enter-password']);
                 return;
             }
             
@@ -315,14 +366,12 @@
                 const data = await apiCall('breach', { password }, 'breSpinner', 'breResult');
                 const result = document.getElementById('breResult');
                 const message = document.getElementById('breMessage');
-                const t = translations[lang];
                 
                 if (data.count === 0) {
-                    message.textContent = t && t['breach-safe'] ? t['breach-safe'] : 'Password sicura - non trovata in violazioni';
+                    message.textContent = t[lang]['breach-safe'];
                     result.className = 'mt-6 p-5 rounded-lg bg-green-50 border-l-4 border-green-400';
                 } else {
-                    const breachText = t && t['breach-found'] ? t['breach-found'] : 'Password trovata in {count} violazioni. Cambiala!';
-                    message.textContent = breachText.replace('{count}', data.count);
+                    message.textContent = t[lang]['breach-found'].replace('{count}', data.count);
                     result.className = 'mt-6 p-5 rounded-lg bg-red-50 border-l-4 border-red-400';
                 }
                 
@@ -332,8 +381,8 @@
             }
         });
 
-        // Initialize - load translations and set up the page
-        loadTranslations();
+        // Initialize
+        translate(lang);
     </script>
 </body>
 </html>
