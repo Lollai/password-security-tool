@@ -4,477 +4,336 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>🔐 Strumento di Sicurezza Password</title>
-    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
-        .container {
-            max-width: 800px;
-            width: 100%;
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-            overflow: hidden;
-        }
-        .header {
-            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-            color: white;
-            padding: 40px;
-            text-align: center;
-            position: relative;
-        }
-        .tabs {
-            display: flex;
-            background: #f8f9fa;
-            border-bottom: 1px solid #e9ecef;
-        }
-        .tab {
-            flex: 1;
-            padding: 20px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            border: none;
-            background: transparent;
-            font-size: 1.1em;
-            font-weight: 600;
-            color: #495057;
-        }
-        .tab:hover {
-            background: #e9ecef;
-        }
-        .tab.active {
-            background: white;
-            color: #4facfe;
-            border-bottom: 3px solid #4facfe;
-        }
-        .tab-content {
-            display: none;
-            padding: 40px;
-            animation: fadeIn 0.5s ease-in;
-        }
-        .tab-content.active {
-            display: block;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        input[type="text"], input[type="password"], input[type="number"] {
-            width: 100%;
-            padding: 15px;
-            border: 2px solid #e9ecef;
-            border-radius: 10px;
-            font-size: 1em;
-            transition: all 0.3s ease;
-        }
-        input[type="text"]:focus, input[type="password"]:focus, input[type="number"]:focus {
-            outline: none;
-            border-color: #4facfe;
-            box-shadow: 0 0 0 3px rgba(79, 172, 254, 0.1);
-        }
-        .btn {
-            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-            color: white;
-            border: none;
-            padding: 15px 30px;
-            border-radius: 10px;
-            font-size: 1.1em;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            width: 100%;
-        }
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(79, 172, 254, 0.3);
-        }
-        .result {
-            margin-top: 30px;
-            padding: 20px;
-            background: #f8f9fa;
-            border-radius: 10px;
-            border-left: 4px solid #4facfe;
-        }
-        .password-result {
-            font-family: 'Courier New', monospace;
-            font-size: 1.3em;
-            background: #343a40;
-            color: #00f2fe;
-            padding: 15px;
-            border-radius: 8px;
-            margin: 15px 0;
-            word-break: break-all;
-            position: relative;
-        }
-        .copy-btn {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: #4facfe;
-            color: white;
-            border: none;
-            padding: 8px 12px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 0.9em;
-            transition: background 0.3s ease;
-        }
-        .copy-btn:hover {
-            background: #00f2fe;
-        }
-        .strength-bar-container {
-            background-color: #e0e0e0;
-            border-radius: 5px;
-            height: 10px;
-            margin-top: 10px;
-            overflow: hidden;
-        }
-        .strength-bar {
-            height: 100%;
-            width: 0%;
-            background-color: #4facfe; /* Default */
-            border-radius: 5px;
-            transition: width 0.5s ease-in-out, background-color 0.5s ease-in-out;
-        }
-        .strength-bar.very-weak { background-color: #ef4444; } /* Red */
-        .strength-bar.weak { background-color: #f97316; } /* Orange */
-        .strength-bar.moderate { background-color: #facc15; } /* Yellow */
-        .strength-bar.strong { background-color: #22c55e; } /* Green */
-        .strength-bar.very-strong { background-color: #0d9488; } /* Teal */
-        .loading-spinner {
-            border: 4px solid rgba(0, 0, 0, 0.1);
-            border-left-color: #4facfe;
-            border-radius: 50%;
-            width: 24px;
-            height: 24px;
-            animation: spin 1s linear infinite;
-            display: inline-block;
-            vertical-align: middle;
-            margin-left: 10px;
-        }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
+        body { font-family: system-ui, -apple-system, sans-serif; }
+        .container { max-width: 800px; background: white; border-radius: 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
+        .header { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); color: white; padding: 40px; text-align: center; position: relative; }
+        .lang-switch { position: absolute; top: 20px; right: 20px; display: flex; gap: 10px; align-items: center; }
+        .switch { position: relative; width: 60px; height: 34px; }
+        .switch input { display: none; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background: #ccc; transition: 0.4s; border-radius: 34px; }
+        .slider:before { position: absolute; content: ""; height: 26px; width: 26px; left: 4px; bottom: 4px; background: white; transition: 0.4s; border-radius: 50%; }
+        input:checked + .slider { background: #4facfe; }
+        input:checked + .slider:before { transform: translateX(26px); }
+        .tab { transition: all 0.3s; }
+        .tab.active { border-bottom: 3px solid #4facfe; color: #4facfe; }
+        .tab-content { display: none; animation: fadeIn 0.5s; }
+        .tab-content.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .btn { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); transition: all 0.3s; }
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(79, 172, 254, 0.3); }
+        .password-result { font-family: 'Courier New', monospace; font-size: 1.3em; background: #1f2937; color: #00f2fe; padding: 15px; border-radius: 8px; margin: 15px 0; word-break: break-all; position: relative; }
+        .copy-btn { position: absolute; top: 10px; right: 10px; background: #4facfe; color: white; border: none; padding: 8px 12px; border-radius: 8px; cursor: pointer; transition: background 0.3s; }
+        .copy-btn:hover { background: #00f2fe; }
+        .strength-bar { height: 10px; border-radius: 5px; transition: width 0.5s, background-color 0.5s; }
+        .strength-very-weak { background: #ef4444; }
+        .strength-weak { background: #f97316; }
+        .strength-moderate { background: #facc15; }
+        .strength-strong { background: #22c55e; }
+        .strength-very-strong { background: #0d9488; }
+        .spinner { border: 4px solid rgba(0,0,0,0.1); border-left-color: #4facfe; border-radius: 50%; width: 24px; height: 24px; animation: spin 1s linear infinite; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
 </head>
-<body class="flex items-center justify-center min-h-screen p-5 bg-gradient-to-br from-indigo-500 to-purple-700">
-    <div class="container rounded-xl shadow-2xl">
-        <div class="header">
-            <h1 class="text-4xl font-extrabold mb-2">🔐 Strumento di Sicurezza Password</h1>
-            <p class="text-lg opacity-90">Genera, analizza e controlla le tue password.</p>
+<body class="min-h-screen bg-gradient-to-br from-indigo-500 to-purple-700 p-5 flex items-center justify-center">
+    <div class="container">
+        <div class="header rounded-t-xl">
+            <div class="lang-switch">
+                <span class="text-sm font-semibold">IT</span>
+                <label class="switch">
+                    <input type="checkbox" id="langToggle">
+                    <span class="slider"></span>
+                </label>
+                <span class="text-sm font-semibold">EN</span>
+            </div>
+            <h1 class="text-4xl font-bold mb-2" data-t="title">🔐 Strumento di Sicurezza Password</h1>
+            <p class="text-lg opacity-90" data-t="subtitle">Genera, analizza e controlla le tue password.</p>
         </div>
 
-        <div class="tabs flex bg-gray-50 border-b border-gray-200">
-            <button class="tab active flex-1 py-5 px-4 text-center cursor-pointer transition-all duration-300 font-semibold text-gray-700 hover:bg-gray-100 border-b-2 border-transparent" data-tab="generate">Genera Password</button>
-            <button class="tab flex-1 py-5 px-4 text-center cursor-pointer transition-all duration-300 font-semibold text-gray-700 hover:bg-gray-100 border-b-2 border-transparent" data-tab="check-strength">Controlla Forza</button>
-            <button class="tab flex-1 py-5 px-4 text-center cursor-pointer transition-all duration-300 font-semibold text-gray-700 hover:bg-gray-100 border-b-2 border-transparent" data-tab="check-breach">Controlla Violazioni</button>
+        <div class="flex bg-gray-50 border-b">
+            <button class="tab flex-1 py-5 px-4 font-semibold text-gray-700 hover:bg-gray-100 active" data-tab="generate" data-t="tab-gen">Genera Password</button>
+            <button class="tab flex-1 py-5 px-4 font-semibold text-gray-700 hover:bg-gray-100" data-tab="strength" data-t="tab-str">Controlla Forza</button>
+            <button class="tab flex-1 py-5 px-4 font-semibold text-gray-700 hover:bg-gray-100" data-tab="breach" data-t="tab-bre">Controlla Violazioni</button>
         </div>
 
-        <div id="generate" class="tab-content active p-10 bg-white">
-            <h2 class="text-2xl font-bold mb-6 text-gray-800">Genera una Password Sicura</h2>
-            <div class="form-group mb-5">
-                <label for="genLength" class="block text-gray-700 font-semibold mb-2">Lunghezza Password (8-128):</label>
-                <input type="number" id="genLength" value="16" min="8" max="128" class="w-full p-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:ring-blue-500">
-            </div>
-            <div class="checkbox-group flex items-center mb-4">
-                <input type="checkbox" id="genSymbols" checked class="mr-2 transform scale-125 text-blue-600 rounded focus:ring-blue-500">
-                <label for="genSymbols" class="text-gray-700">Includi Simboli (!@#$%)</label>
-            </div>
-            <div class="checkbox-group flex items-center mb-6">
-                <input type="checkbox" id="genAmbiguous" checked class="mr-2 transform scale-125 text-blue-600 rounded focus:ring-blue-500">
-                <label for="genAmbiguous" class="text-gray-700">Escludi Caratteri Ambigui (0, O, 1, l, I, |)</label>
-            </div>
-            <button id="generateBtn" class="btn flex items-center justify-center">
-                Genera Password
-                <span id="generateSpinner" class="loading-spinner hidden"></span>
-            </button>
-            <div id="generateResult" class="result mt-8 p-5 bg-blue-50 border-l-4 border-blue-400 rounded-lg text-gray-800">
-                <p class="font-semibold text-lg mb-2">La tua password generata apparirà qui:</p>
-                <div class="password-result relative">
-                    <span id="generatedPasswordText"></span>
-                    <button class="copy-btn" onclick="copyToClipboard('generatedPasswordText')">Copia</button>
+        <!-- Generate Password Tab -->
+        <div id="generate" class="tab-content active p-10">
+            <h2 class="text-2xl font-bold mb-6" data-t="gen-title">Genera una Password Sicura</h2>
+            <div class="space-y-4">
+                <div>
+                    <label class="block font-semibold mb-2" data-t="gen-length">Lunghezza (8-128):</label>
+                    <input type="number" id="genLength" value="16" min="8" max="128" class="w-full p-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none">
                 </div>
-                <p class="mt-4 text-sm">Forza: <span id="generatedPasswordStrength"></span></p>
-            </div>
-        </div>
-
-        <div id="check-strength" class="tab-content p-10 bg-white">
-            <h2 class="text-2xl font-bold mb-6 text-gray-800">Controlla la Forza della Password</h2>
-            <div class="form-group mb-5">
-                <label for="checkPassword" class="block text-gray-700 font-semibold mb-2">Inserisci la password da controllare:</label>
-                <input type="password" id="checkPassword" placeholder="La tua password" class="w-full p-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:ring-blue-500">
-            </div>
-            <button id="checkStrengthBtn" class="btn flex items-center justify-center">
-                Controlla Forza
-                <span id="checkStrengthSpinner" class="loading-spinner hidden"></span>
-            </button>
-            <div id="checkStrengthResult" class="result mt-8 p-5 bg-green-50 border-l-4 border-green-400 rounded-lg text-gray-800">
-                <h3 class="font-bold text-xl mb-3">Risultati Analisi:</h3>
-                <p>Forza complessiva: <span id="strengthLabel" class="font-semibold"></span> (<span id="strengthScore"></span>/100)</p>
-                <div class="strength-bar-container">
-                    <div id="strengthProgressBar" class="strength-bar" style="width: 0%;"></div>
+                <div class="flex items-center gap-2">
+                    <input type="checkbox" id="genSymbols" checked class="w-4 h-4 text-blue-600">
+                    <label data-t="gen-symbols">Includi Simboli (!@#$%)</label>
                 </div>
-                <p class="mt-4">Lunghezza: <span id="detailLength"></span> caratteri</p>
-                <p>Maiuscole: <span id="detailUpper"></span></p>
-                <p>Minuscole: <span id="detailLower"></span></p>
-                <p>Numeri: <span id="detailDigits"></span></p>
-                <p>Simboli: <span id="detailSpecial"></span></p>
-                <p>Password comune: <span id="detailCommon"></span></p>
-                <h4 class="font-bold text-lg mt-5 mb-2">Raccomandazioni:</h4>
-                <ul id="recommendationsList" class="list-disc pl-5">
-                    <!-- Recommendations will be loaded here -->
-                </ul>
+                <div class="flex items-center gap-2">
+                    <input type="checkbox" id="genAmbiguous" checked class="w-4 h-4 text-blue-600">
+                    <label data-t="gen-ambiguous">Escludi Caratteri Ambigui (0, O, 1, l, I, |)</label>
+                </div>
+                <button id="genBtn" class="btn w-full py-3 text-white font-semibold rounded-lg flex items-center justify-center gap-2">
+                    <span data-t="gen-btn">Genera Password</span>
+                    <div id="genSpinner" class="spinner hidden"></div>
+                </button>
+            </div>
+            <div id="genResult" class="mt-6 p-5 bg-blue-50 border-l-4 border-blue-400 rounded-lg hidden">
+                <p class="font-semibold mb-2" data-t="gen-result">Password generata:</p>
+                <div class="password-result">
+                    <span id="genPassword"></span>
+                    <button class="copy-btn" onclick="copyText('genPassword')" data-t="copy">Copia</button>
+                </div>
+                <p class="text-sm"><span data-t="strength">Forza:</span> <span id="genStrength"></span></p>
             </div>
         </div>
 
-        <div id="check-breach" class="tab-content p-10 bg-white">
-            <h2 class="text-2xl font-bold mb-6 text-gray-800">Controlla Violazioni di Dati</h2>
-            <div class="form-group mb-5">
-                <label for="breachPassword" class="block text-gray-700 font-semibold mb-2">Inserisci la password da controllare:</label>
-                <input type="password" id="breachPassword" placeholder="La tua password" class="w-full p-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:ring-blue-500">
+        <!-- Check Strength Tab -->
+        <div id="strength" class="tab-content p-10">
+            <h2 class="text-2xl font-bold mb-6" data-t="str-title">Controlla la Forza della Password</h2>
+            <div class="space-y-4">
+                <div>
+                    <label class="block font-semibold mb-2" data-t="str-label">Inserisci password:</label>
+                    <input type="password" id="strPassword" class="w-full p-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none" data-t-placeholder="password">
+                </div>
+                <button id="strBtn" class="btn w-full py-3 text-white font-semibold rounded-lg flex items-center justify-center gap-2">
+                    <span data-t="str-btn">Controlla Forza</span>
+                    <div id="strSpinner" class="spinner hidden"></div>
+                </button>
             </div>
-            <button id="checkBreachBtn" class="btn flex items-center justify-center">
-                Controlla Password
-                <span id="checkBreachSpinner" class="loading-spinner hidden"></span>
-            </button>
-            <div id="breachResult" class="result mt-8 p-5 bg-red-50 border-l-4 border-red-400 rounded-lg text-gray-800">
-                <p id="breachMessage" class="font-semibold text-lg"></p>
+            <div id="strResult" class="mt-6 p-5 bg-green-50 border-l-4 border-green-400 rounded-lg hidden">
+                <h3 class="font-bold text-xl mb-3" data-t="str-results">Risultati:</h3>
+                <p><span data-t="str-overall">Forza:</span> <span id="strLabel"></span> (<span id="strScore"></span>/100)</p>
+                <div class="bg-gray-200 rounded-full h-3 mt-2">
+                    <div id="strBar" class="strength-bar h-full rounded-full" style="width: 0%"></div>
+                </div>
+                <div class="mt-4 space-y-1 text-sm">
+                    <p><span data-t="str-len">Lunghezza:</span> <span id="strLen"></span></p>
+                    <p><span data-t="str-upper">Maiuscole:</span> <span id="strUpper"></span></p>
+                    <p><span data-t="str-lower">Minuscole:</span> <span id="strLower"></span></p>
+                    <p><span data-t="str-digits">Numeri:</span> <span id="strDigits"></span></p>
+                    <p><span data-t="str-special">Simboli:</span> <span id="strSpecial"></span></p>
+                    <p><span data-t="str-common">Password comune:</span> <span id="strCommon"></span></p>
+                </div>
+                <div class="mt-4">
+                    <h4 class="font-bold mb-2" data-t="str-rec">Raccomandazioni:</h4>
+                    <ul id="strRecommendations" class="list-disc pl-5 space-y-1"></ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Check Breach Tab -->
+        <div id="breach" class="tab-content p-10">
+            <h2 class="text-2xl font-bold mb-6" data-t="bre-title">Controlla Violazioni</h2>
+            <div class="space-y-4">
+                <div>
+                    <label class="block font-semibold mb-2" data-t="bre-label">Inserisci password:</label>
+                    <input type="password" id="brePassword" class="w-full p-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none" data-t-placeholder="password">
+                </div>
+                <button id="breBtn" class="btn w-full py-3 text-white font-semibold rounded-lg flex items-center justify-center gap-2">
+                    <span data-t="bre-btn">Controlla Password</span>
+                    <div id="breSpinner" class="spinner hidden"></div>
+                </button>
+            </div>
+            <div id="breResult" class="mt-6 p-5 rounded-lg hidden">
+                <p id="breMessage" class="font-semibold"></p>
             </div>
         </div>
     </div>
 
     <script>
-        // Funzione per copiare negli appunti
-        function copyToClipboard(elementId) {
-            const element = document.getElementById(elementId);
-            const textToCopy = element.innerText;
-            if (textToCopy) {
-                const textarea = document.createElement('textarea');
-                textarea.value = textToCopy;
-                document.body.appendChild(textarea);
-                textarea.select();
-                try {
-                    document.execCommand('copy');
-                    alert('Password copiata negli appunti!'); // Sostituire con un modal più elegante in un'app reale
-                } catch (err) {
-                    console.error('Impossibile copiare: ', err);
-                }
-                document.body.removeChild(textarea);
+        let lang = 'it';
+        let translations = {};
+
+        // Load translations from JSON files
+        async function loadTranslations() {
+            try {
+                const [itResponse, enResponse] = await Promise.all([
+                    fetch('./translations/it.json'),
+                    fetch('./translations/en.json')
+                ]);
+                
+                translations.it = await itResponse.json();
+                translations.en = await enResponse.json();
+                
+                // Initialize with current language
+                translate(lang);
+            } catch (error) {
+                console.error('Error loading translations:', error);
+                // Fallback to basic functionality if translations fail
             }
         }
 
-        // Gestione delle schede
-        const tabs = document.querySelectorAll('.tab');
-        const tabContents = document.querySelectorAll('.tab-content');
+        // Translation function
+        function translate(l) {
+            if (!translations[l]) return;
+            
+            const t = translations[l];
+            
+            document.querySelectorAll('[data-t]').forEach(el => {
+                const key = el.getAttribute('data-t');
+                if (t[key]) el.textContent = t[key];
+            });
+            
+            document.querySelectorAll('[data-t-placeholder]').forEach(el => {
+                const key = el.getAttribute('data-t-placeholder');
+                if (t[key]) el.placeholder = t[key];
+            });
+            
+            if (t.title) document.title = t.title;
+        }
 
-        tabs.forEach(tab => {
+        // Language toggle
+        document.getElementById('langToggle').addEventListener('change', function() {
+            lang = this.checked ? 'en' : 'it';
+            translate(lang);
+        });
+
+        // Tab switching
+        document.querySelectorAll('.tab').forEach(tab => {
             tab.addEventListener('click', () => {
-                tabs.forEach(t => t.classList.remove('active', 'border-blue-500'));
-                tabContents.forEach(tc => tc.classList.remove('active'));
-
-                tab.classList.add('active', 'border-blue-500');
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(tc => tc.classList.remove('active'));
+                tab.classList.add('active');
                 document.getElementById(tab.dataset.tab).classList.add('active');
             });
         });
 
-        // Funzione helper per mostrare/nascondere spinner
-        function toggleSpinner(spinnerId, show) {
-            document.getElementById(spinnerId).classList.toggle('hidden', !show);
+        // Copy function
+        function copyText(id) {
+            const text = document.getElementById(id).textContent;
+            navigator.clipboard.writeText(text).then(() => {
+                const t = translations[lang];
+                alert(t && t['copy-success'] ? t['copy-success'] : 'Copiato!');
+            });
         }
 
-        // --- Funzionalità Genera Password ---
-        const generateBtn = document.getElementById('generateBtn');
-        const genLengthInput = document.getElementById('genLength');
-        const genSymbolsCheckbox = document.getElementById('genSymbols');
-        const genAmbiguousCheckbox = document.getElementById('genAmbiguous');
-        const generatedPasswordText = document.getElementById('generatedPasswordText');
-        const generatedPasswordStrength = document.getElementById('generatedPasswordStrength');
-        const generateResultDiv = document.getElementById('generateResult');
-
-        generateResultDiv.style.display = 'none'; // Nascondi i risultati inizialmente
-
-        generateBtn.addEventListener('click', async () => {
-            const length = parseInt(genLengthInput.value);
-            const includeSymbols = genSymbolsCheckbox.checked;
-            const excludeAmbiguous = genAmbiguousCheckbox.checked;
-
-            toggleSpinner('generateSpinner', true);
-            generateResultDiv.style.display = 'none'; // Nascondi i risultati precedenti
-
+        // API call helper
+        async function apiCall(endpoint, data, spinnerId, resultId) {
+            const spinner = document.getElementById(spinnerId);
+            const result = document.getElementById(resultId);
+            
+            spinner.classList.remove('hidden');
+            result.classList.add('hidden');
+            
             try {
-                const response = await fetch('/api/generate', {
+                const response = await fetch(`/api/${endpoint}`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ length, include_symbols: includeSymbols, exclude_ambiguous: excludeAmbiguous })
+                    body: JSON.stringify(data)
                 });
-
-                const data = await response.json();
-
+                
+                const responseData = await response.json();
+                
                 if (response.ok) {
-                    generatedPasswordText.innerText = data.password;
-                    generatedPasswordStrength.innerText = `${data.strength_label} (${data.strength_score}/100)`;
-                    generateResultDiv.style.display = 'block';
+                    return responseData;
                 } else {
-                    alert(`Errore nella generazione: ${data.detail || 'Errore sconosciuto'}`);
+                    throw new Error(responseData.detail || 'Unknown error');
                 }
             } catch (error) {
-                console.error('Errore di rete o parsing:', error);
-                alert('Errore di connessione al server. Assicurati che il backend sia in esecuzione.');
+                const t = translations[lang];
+                alert(t && t['network-error'] ? t['network-error'] : 'Errore di rete');
+                throw error;
             } finally {
-                toggleSpinner('generateSpinner', false);
+                spinner.classList.add('hidden');
+            }
+        }
+
+        // Generate password
+        document.getElementById('genBtn').addEventListener('click', async () => {
+            const length = parseInt(document.getElementById('genLength').value);
+            const includeSymbols = document.getElementById('genSymbols').checked;
+            const excludeAmbiguous = document.getElementById('genAmbiguous').checked;
+            
+            try {
+                const data = await apiCall('generate', {
+                    length,
+                    include_symbols: includeSymbols,
+                    exclude_ambiguous: excludeAmbiguous
+                }, 'genSpinner', 'genResult');
+                
+                document.getElementById('genPassword').textContent = data.password;
+                document.getElementById('genStrength').textContent = `${data.strength_label} (${data.strength_score}/100)`;
+                document.getElementById('genResult').classList.remove('hidden');
+            } catch (error) {
+                // Error already handled in apiCall
             }
         });
 
-        // --- Funzionalità Controlla Forza ---
-        const checkStrengthBtn = document.getElementById('checkStrengthBtn');
-        const checkPasswordInput = document.getElementById('checkPassword');
-        const checkStrengthResultDiv = document.getElementById('checkStrengthResult');
-        const strengthLabelSpan = document.getElementById('strengthLabel');
-        const strengthScoreSpan = document.getElementById('strengthScore');
-        const strengthProgressBar = document.getElementById('strengthProgressBar');
-        const detailLengthSpan = document.getElementById('detailLength');
-        const detailUpperSpan = document.getElementById('detailUpper');
-        const detailLowerSpan = document.getElementById('detailLower');
-        const detailDigitsSpan = document.getElementById('detailDigits');
-        const detailSpecialSpan = document.getElementById('detailSpecial');
-        const detailCommonSpan = document.getElementById('detailCommon');
-        const recommendationsList = document.getElementById('recommendationsList');
-
-        checkStrengthResultDiv.style.display = 'none'; // Nascondi i risultati inizialmente
-
-        checkStrengthBtn.addEventListener('click', async () => {
-            const password = checkPasswordInput.value;
+        // Check strength
+        document.getElementById('strBtn').addEventListener('click', async () => {
+            const password = document.getElementById('strPassword').value;
             if (!password) {
-                alert('Inserisci una password da controllare.');
+                const t = translations[lang];
+                alert(t && t['enter-password'] ? t['enter-password'] : 'Inserisci una password');
                 return;
             }
-
-            toggleSpinner('checkStrengthSpinner', true);
-            checkStrengthResultDiv.style.display = 'none'; // Nascondi i risultati precedenti
-
+            
             try {
-                const response = await fetch('/api/check', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ password: password })
+                const data = await apiCall('check', { password }, 'strSpinner', 'strResult');
+                const stats = data.stats;
+                const t = translations[lang];
+                
+                document.getElementById('strLabel').textContent = stats.strength_label;
+                document.getElementById('strScore').textContent = stats.strength_score;
+                
+                const bar = document.getElementById('strBar');
+                bar.style.width = `${stats.strength_score}%`;
+                bar.className = `strength-bar h-full rounded-full strength-${stats.strength_label.toLowerCase().replace(' ', '-')}`;
+                
+                document.getElementById('strLen').textContent = stats.length;
+                document.getElementById('strUpper').innerHTML = stats.has_upper ? (t?.yes || '✅ Sì') : (t?.no || '❌ No');
+                document.getElementById('strLower').innerHTML = stats.has_lower ? (t?.yes || '✅ Sì') : (t?.no || '❌ No');
+                document.getElementById('strDigits').innerHTML = stats.has_digits ? (t?.yes || '✅ Sì') : (t?.no || '❌ No');
+                document.getElementById('strSpecial').innerHTML = stats.has_special ? (t?.yes || '✅ Sì') : (t?.no || '❌ No');
+                document.getElementById('strCommon').innerHTML = stats.is_common ? (t?.['warning-yes'] || '⚠️ Sì') : (t?.no || '❌ No');
+                
+                const recList = document.getElementById('strRecommendations');
+                recList.innerHTML = '';
+                (data.recommendations || []).forEach(rec => {
+                    const li = document.createElement('li');
+                    li.textContent = rec;
+                    recList.appendChild(li);
                 });
-
-                const data = await response.json();
-
-                if (response.ok) {
-                    const stats = data.stats;
-                    strengthLabelSpan.innerText = stats.strength_label;
-                    strengthScoreSpan.innerText = stats.strength_score;
-
-                    // Aggiorna la barra di progresso e il colore
-                    strengthProgressBar.style.width = `${stats.strength_score}%`;
-                    strengthProgressBar.className = 'strength-bar'; // Reset classes
-                    if (stats.strength_label === 'Very Weak') strengthProgressBar.classList.add('very-weak');
-                    else if (stats.strength_label === 'Weak') strengthProgressBar.classList.add('weak');
-                    else if (stats.strength_label === 'Moderate') strengthProgressBar.classList.add('moderate');
-                    else if (stats.strength_label === 'Strong') strengthProgressBar.classList.add('strong');
-                    else if (stats.strength_label === 'Very Strong') strengthProgressBar.classList.add('very-strong');
-
-                    detailLengthSpan.innerText = stats.length;
-                    detailUpperSpan.innerHTML = stats.has_upper ? '✅ Sì' : '❌ No';
-                    detailLowerSpan.innerHTML = stats.has_lower ? '✅ Sì' : '❌ No';
-                    detailDigitsSpan.innerHTML = stats.has_digits ? '✅ Sì' : '❌ No';
-                    detailSpecialSpan.innerHTML = stats.has_special ? '✅ Sì' : '❌ No';
-                    detailCommonSpan.innerHTML = stats.is_common ? '⚠️ Sì' : '✅ No';
-
-                    recommendationsList.innerHTML = '';
-                    if (data.recommendations && data.recommendations.length > 0) {
-                        data.recommendations.forEach(rec => {
-                            const li = document.createElement('li');
-                            li.innerText = rec;
-                            recommendationsList.appendChild(li);
-                        });
-                    } else {
-                        const li = document.createElement('li');
-                        li.innerText = '🎉 Ottimo! Questa password soddisfa tutti i criteri di sicurezza.';
-                        recommendationsList.appendChild(li);
-                    }
-                    checkStrengthResultDiv.style.display = 'block';
-                } else {
-                    alert(`Errore nell'analisi: ${data.detail || 'Errore sconosciuto'}`);
-                }
+                
+                document.getElementById('strResult').classList.remove('hidden');
             } catch (error) {
-                console.error('Errore di rete o parsing:', error);
-                alert('Errore di connessione al server. Assicurati che il backend sia in esecuzione.');
-            } finally {
-                toggleSpinner('checkStrengthSpinner', false);
+                // Error already handled in apiCall
             }
         });
 
-        // --- Funzionalità Controlla Violazioni ---
-        const checkBreachBtn = document.getElementById('checkBreachBtn');
-        const breachPasswordInput = document.getElementById('breachPassword');
-        const breachResultDiv = document.getElementById('breachResult');
-        const breachMessageP = document.getElementById('breachMessage');
-
-        breachResultDiv.style.display = 'none'; // Nascondi i risultati inizialmente
-
-        checkBreachBtn.addEventListener('click', async () => {
-            const password = breachPasswordInput.value;
+        // Check breach
+        document.getElementById('breBtn').addEventListener('click', async () => {
+            const password = document.getElementById('brePassword').value;
             if (!password) {
-                alert('Inserisci una password da controllare per le violazioni.');
+                const t = translations[lang];
+                alert(t && t['enter-password'] ? t['enter-password'] : 'Inserisci una password');
                 return;
             }
-
-            toggleSpinner('checkBreachSpinner', true);
-            breachResultDiv.style.display = 'none'; // Nascondi i risultati precedenti
-            breachResultDiv.classList.remove('bg-red-50', 'border-red-400', 'bg-green-50', 'border-green-400', 'bg-yellow-50', 'border-yellow-400');
-
+            
             try {
-                const response = await fetch('/api/breach', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ password: password })
-                });
-
-                const data = await response.json();
-
-                if (response.ok) {
-                    breachMessageP.innerText = data.message;
-                    if (data.is_breached) {
-                        breachResultDiv.classList.add('bg-red-50', 'border-red-400');
-                    } else if (data.count === 0) {
-                        breachResultDiv.classList.add('bg-green-50', 'border-green-400');
-                    } else { // Questo caso dovrebbe catturare il "count is None" dal backend
-                        breachResultDiv.classList.add('bg-yellow-50', 'border-yellow-400');
-                    }
-                    breachResultDiv.style.display = 'block';
+                const data = await apiCall('breach', { password }, 'breSpinner', 'breResult');
+                const result = document.getElementById('breResult');
+                const message = document.getElementById('breMessage');
+                const t = translations[lang];
+                
+                if (data.count === 0) {
+                    message.textContent = t && t['breach-safe'] ? t['breach-safe'] : 'Password sicura - non trovata in violazioni';
+                    result.className = 'mt-6 p-5 rounded-lg bg-green-50 border-l-4 border-green-400';
                 } else {
-                    // Gestisce gli errori HTTP del backend (es. 400 Bad Request)
-                    breachMessageP.innerText = `Errore: ${data.detail || 'Errore sconosciuto'}`;
-                    breachResultDiv.classList.add('bg-red-50', 'border-red-400');
-                    breachResultDiv.style.display = 'block';
+                    const breachText = t && t['breach-found'] ? t['breach-found'] : 'Password trovata in {count} violazioni. Cambiala!';
+                    message.textContent = breachText.replace('{count}', data.count);
+                    result.className = 'mt-6 p-5 rounded-lg bg-red-50 border-l-4 border-red-400';
                 }
+                
+                result.classList.remove('hidden');
             } catch (error) {
-                console.error('Errore di rete o parsing:', error);
-                breachMessageP.innerText = 'Errore di connessione al server. Assicurati che il backend sia in esecuzione.';
-                breachResultDiv.classList.add('bg-red-50', 'border-red-400');
-                breachResultDiv.style.display = 'block';
-            } finally {
-                toggleSpinner('checkBreachSpinner', false);
+                // Error already handled in apiCall
             }
         });
 
-        // Attiva la prima scheda all'avvio
-        document.addEventListener('DOMContentLoaded', () => {
-            document.querySelector('.tab').click();
-        });
+        // Initialize - load translations and set up the page
+        loadTranslations();
     </script>
 </body>
 </html>
