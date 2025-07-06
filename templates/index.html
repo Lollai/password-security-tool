@@ -6,6 +6,7 @@
     <title>🔐 Strumento di Sicurezza Password</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel='stylesheet' type='text/css' href='/static/style.css'>
+    <script src="/static/translations.js"></script>
 </head>
 <body class="min-h-screen bg-gradient-to-br from-indigo-500 to-purple-700 p-5 flex items-center justify-center">
     <div class="container">
@@ -113,88 +114,8 @@
     </div>
 
     <script>
-        // Translations
-        const t = {
-            it: {
-                title: '🔐 Strumento di Sicurezza Password',
-                subtitle: 'Genera, analizza e controlla le tue password.',
-                'tab-gen': 'Genera Password',
-                'tab-str': 'Controlla Forza',
-                'tab-bre': 'Controlla Violazioni',
-                'gen-title': 'Genera una Password Sicura',
-                'gen-length': 'Lunghezza (8-128):',
-                'gen-symbols': 'Includi Simboli (!@#$%)',
-                'gen-ambiguous': 'Escludi Caratteri Ambigui (0, O, 1, l, I, |)',
-                'gen-btn': 'Genera Password',
-                'gen-result': 'Password generata:',
-                copy: 'Copia',
-                strength: 'Forza:',
-                'str-title': 'Controlla la Forza della Password',
-                'str-label': 'Inserisci password:',
-                password: 'La tua password',
-                'str-btn': 'Controlla Forza',
-                'str-results': 'Risultati:',
-                'str-overall': 'Forza:',
-                'str-len': 'Lunghezza:',
-                'str-upper': 'Maiuscole:',
-                'str-lower': 'Minuscole:',
-                'str-digits': 'Numeri:',
-                'str-special': 'Simboli:',
-                'str-common': 'Password comune:',
-                'str-rec': 'Raccomandazioni:',
-                'bre-title': 'Controlla Violazioni',
-                'bre-label': 'Inserisci password:',
-                'bre-btn': 'Controlla Password',
-                'copy-success': 'Copiato!',
-                'enter-password': 'Inserisci una password',
-                'network-error': 'Errore di rete',
-                'yes': '✅ Sì',
-                'no': '❌ No',
-                'warning-yes': '⚠️ Sì',
-                'breach-safe': 'Password sicura - non trovata in violazioni',
-                'breach-found': 'Password trovata in {count} violazioni. Cambiala!'
-            },
-            en: {
-                title: '🔐 Password Security Tool',
-                subtitle: 'Generate, analyze and check your passwords.',
-                'tab-gen': 'Generate Password',
-                'tab-str': 'Check Strength',
-                'tab-bre': 'Check Breaches',
-                'gen-title': 'Generate a Secure Password',
-                'gen-length': 'Length (8-128):',
-                'gen-symbols': 'Include Symbols (!@#$%)',
-                'gen-ambiguous': 'Exclude Ambiguous Characters (0, O, 1, l, I, |)',
-                'gen-btn': 'Generate Password',
-                'gen-result': 'Generated password:',
-                copy: 'Copy',
-                strength: 'Strength:',
-                'str-title': 'Check Password Strength',
-                'str-label': 'Enter password:',
-                password: 'Your password',
-                'str-btn': 'Check Strength',
-                'str-results': 'Results:',
-                'str-overall': 'Strength:',
-                'str-len': 'Length:',
-                'str-upper': 'Uppercase:',
-                'str-lower': 'Lowercase:',
-                'str-digits': 'Numbers:',
-                'str-special': 'Symbols:',
-                'str-common': 'Common password:',
-                'str-rec': 'Recommendations:',
-                'bre-title': 'Check Breaches',
-                'bre-label': 'Enter password:',
-                'bre-btn': 'Check Password',
-                'copy-success': 'Copied!',
-                'enter-password': 'Enter a password',
-                'network-error': 'Network error',
-                'yes': '✅ Yes',
-                'no': '❌ No',
-                'warning-yes': '⚠️ Yes',
-                'breach-safe': 'Password safe - not found in breaches',
-                'breach-found': 'Password found in {count} breaches. Change it!'
-            }
-        };
-
+        // Usa le traduzioni dal file esterno
+        const t = getTranslations();
         let lang = 'it';
 
         // Translation function
