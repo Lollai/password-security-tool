@@ -19,7 +19,7 @@ A secure, multilingual password management tool with:
 
 ### 🚀 Live Demo
 
-Try it online: [https://your-app-name.onrender.com](https://your-app-name.onrender.com)
+Try it online: [HERE](https://password-security-tool-8hd8.onrender.com/)
 
 ### 🛠️ Features
 
@@ -69,7 +69,7 @@ Uno strumento multilingue per la gestione sicura delle password con:
 
 ### 🚀 Provalo subito
 
-Prova online: [https://your-app-name.onrender.com](https://your-app-name.onrender.com)
+Prova online: [CLICCA QUI](https://password-security-tool-8hd8.onrender.com/)
 
 ### 🛠️ Caratteristiche
 
