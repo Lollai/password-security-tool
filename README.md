@@ -1,105 +1,101 @@
-# 🔐 Password Security Tool
+# Password Security Tool
 
-[English](#password-security-tool) | [Italiano](#italiano)
+A modern web application for password generation, strength analysis, and breach detection, built with FastAPI and vanilla JavaScript.
 
----
+![Password Security Tool Screenshot](https://via.placeholder.com/800x450.png?text=Password+Security+Tool)
 
-## English
+## 🚀 Features
 
-### 🎯 What is this?
+- **🔑 Password Generation**: Create secure passwords with customizable options
+- **🛡️ Strength Analysis**: Analyze password strength with detailed feedback
+- **🔍 Breach Detection**: Check if passwords have been compromised using HaveIBeenPwned API
+- **🌐 Multilingual**: Available in English and Italian
+- **📱 Responsive Design**: Works on desktop, tablet, and mobile devices
+- **🔒 Security Focused**: Client-side password handling with secure API communication
 
-A secure, multilingual password management tool with:
+## 🛠️ Tech Stack
 
-- ✅ Secure password generation using cryptographically secure methods  
-- ✅ Password strength analysis with detailed scoring  
-- ✅ Breach checking via HaveIBeenPwned API (safe, uses partial hashes)  
-- ✅ Multilingual support (English & Italian)  
-- ✅ No password storage - your passwords are never saved  
-- ✅ Web interface + CLI - use it however you prefer  
+- **Backend**: FastAPI (Python 3.12)
+- **Frontend**: HTML5, CSS3, Vanilla JavaScript (No frameworks!)
+- **APIs**: HaveIBeenPwned for breach detection
+- **Deployment**: Ready for Render, Vercel, or any Python hosting
 
-### 🚀 Live Demo
+## ⚙️ Installation
 
-Try it online: [HERE](https://password-security-tool-8hd8.onrender.com/)
-
-### 🛠️ Features
-
-- **Password Generator:** Create strong, customizable passwords  
-- **Strength Analyzer:** Check password robustness with detailed feedback  
-- **Breach Checker:** Verify if password was compromised in data breaches  
-- **Security First:** Uses `secrets` module, partial SHA-1 hashes, no storage  
-- **Modern UI:** Clean, responsive interface with dark/light themes  
-
-### 🏃‍♂️ Quick Start
-
-
-# Clone repository
+1. Clone the repository:
+```bash
 git clone https://github.com/yourusername/password-security-tool.git
 cd password-security-tool
+```
 
-# Install dependencies
+2. Create a virtual environment:
+```bash
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+```
+
+3. Install dependencies:
+```bash
 pip install -r requirements.txt
+```
 
-# Run locally
+4. Run the application:
+```bash
 uvicorn app.main:app --reload
+```
 
-### 📚 API Documentation
+5. Open your browser and navigate to `http://localhost:8000`
 
-Once running, visit: [http://localhost:8000/](http://localhost:8000/)
+## 📝 Usage
 
-### 🔧 Tech Stack
+### Generate Passwords
+- Adjust length with the slider (8-32 characters)
+- Choose to include symbols and exclude ambiguous characters
+- Click "Generate Password" to create a secure password
+- Copy the generated password to your clipboard
 
-- **Backend:** FastAPI (Python)  
-- **Frontend:** HTML5, CSS3, JavaScript  
-- **Security:** HaveIBeenPwned API, SHA-1 partial hashes  
-- **Deployment:** Render, Vercel, Railway compatible  
+### Check Password Strength
+- Enter your password in the strength checker
+- View detailed analysis including character types and recommendations
+- See visual strength meter with color-coded feedback
 
+### Check Data Breaches
+- Enter a password to check against known data breaches
+- Uses HaveIBeenPwned API to check compromise status
+- Displays breach count if password was found in breaches
 
-## Italiano
+## 🔌 API Endpoints
 
-### 🎯 Cos'è questo?
+- `GET /` - Main application page
+- `POST /api/generate` - Generate secure password
+- `POST /api/check` - Analyze password strength
+- `POST /api/breach` - Check password breaches
 
-Uno strumento multilingue per la gestione sicura delle password con:
+## 🔒 Security Features
 
-- ✅ Generazione password sicure usando metodi crittograficamente sicuri  
-- ✅ Analisi robustezza password con punteggio dettagliato  
-- ✅ Controllo violazioni tramite API HaveIBeenPwned (sicuro, usa hash parziali)  
-- ✅ Supporto multilingue (Inglese e Italiano)  
-- ✅ Nessun salvataggio password - le tue password non vengono mai salvate  
-- ✅ Interfaccia web + CLI - usalo come preferisci  
+- Passwords are hashed using SHA-1 before breach checking
+- Only first 5 characters of hash are sent to external API (k-anonymity)
+- No passwords are stored or logged
+- Content Security Policy implemented
+- CORS protection
 
-### 🚀 Provalo subito
+## 🚀 Deployment
 
-Prova online: [CLICCA QUI](https://password-security-tool-8hd8.onrender.com/)
+### Render
+1. Create a new Web Service
+2. Connect your GitHub repository
+3. Use the following settings:
+   - Build Command: `pip install -r requirements.txt`
+   - Start Command: `uvicorn app.main:app --host 0.0.0.0 --port $PORT`
 
-### 🛠️ Caratteristiche
+## 📄 License
 
-- **Generatore Password:** Crea password forti e personalizzabili  
-- **Analizzatore Robustezza:** Controlla la robustezza con feedback dettagliato  
-- **Controllo Violazioni:** Verifica se la password è stata compromessa  
-- **Sicurezza Prima:** Usa modulo `secrets`, hash SHA-1 parziali, nessun salvataggio  
-- **UI Moderna:** Interfaccia pulita e responsive con temi scuro/chiaro  
+MIT
 
-### 🏃‍♂️ Avvio Rapido
+MIT License - see LICENSE file for details
 
+## Acknowledgments
 
-# Clona il repository
-git clone https://github.com/yourusername/password-security-tool.git
-cd password-security-tool
-
-# Installa dipendenze
-pip install -r requirements.txt
-
-# Esegui localmente
-uvicorn app.main:app --reload
-
-
-### 📚 Documentazione API
-
-Una volta avviato, visita: [http://localhost:8000/](http://localhost:8000/)
-
-### 🔧 Tecnologia utilizzata
-
-- **Backend:** FastAPI (Python)  
-- **Frontend:** HTML5, CSS3, JavaScript  
-- **Sicurezza:** API HaveIBeenPwned, hash SHA-1 parziali  
-- **Deploy:** Compatibile con Render, Vercel, Railway  
+- [HaveIBeenPwned](https://haveibeenpwned.com/) for breach detection API
+- [Lucide](https://lucide.dev/) for beautiful icons
+- [FastAPI](https://fastapi.tiangolo.com/) for the excellent web framework
