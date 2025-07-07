@@ -6,19 +6,33 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.trustedhost import TrustedHostMiddleware
 from pydantic import BaseModel
 import uvicorn
+import os
 from .password_tool import PasswordTool
 
 # Initialize FastAPI app
 app = FastAPI(title="Password Security Tool")
 
+# Environment-based configuration
+ENVIRONMENT = os.getenv("ENVIRONMENT", "development")
+
+if ENVIRONMENT == "production":
+    # Configurazione per produzione (Render)
+    allowed_hosts = ["password-security-tool-8hd8.onrender.com"]
+    cors_origins = ["https://password-security-tool-8hd8.onrender.com"]
+else:
+    # Configurazione per sviluppo locale
+    allowed_hosts = ["localhost", "127.0.0.1", "0.0.0.0"]
+    cors_origins = ["http://localhost:8000", "http://127.0.0.1:8000"]
+
 # Security middleware
 app.add_middleware(
-    TrustedHostMiddleware, allowed_hosts=["*"]  # Restringe a domini specifici in produzione
+    TrustedHostMiddleware, 
+    allowed_hosts=allowed_hosts
 )
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Restringe a domini specifici in produzione
+    allow_origins=cors_origins,
     allow_methods=["GET", "POST"],
     allow_headers=["*"],
 )

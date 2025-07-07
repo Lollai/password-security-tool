@@ -181,8 +181,6 @@ uvicorn app.main:app --reload
 
 ## 📄 License
 
-MIT
-
 MIT License - see LICENSE file for details
 
 ## Acknowledgments
