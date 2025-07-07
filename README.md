@@ -11,10 +11,6 @@ A modern web application for password generation, strength analysis, and breach 
 
 Un'applicazione web moderna per la generazione di password, analisi della sicurezza e rilevamento di violazioni, costruita con FastAPI e JavaScript vanilla.
 
-# Password Security Tool (Italiano)
-
-Un'applicazione web moderna per la generazione di password, analisi della sicurezza e rilevamento di violazioni, costruita con FastAPI e JavaScript vanilla.
-
 ## 🚀 Caratteristiche
 
 - **🔑 Generazione Password**: Crea password sicure con opzioni personalizzabili
