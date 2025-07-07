@@ -181,7 +181,7 @@ uvicorn app.main:app --reload
 
 ## 📄 License
 
-MIT License - see LICENSE file for details
+GNU GENERAL PUBLIC LICENSE - see LICENSE file for details
 
 ## Acknowledgments
 
