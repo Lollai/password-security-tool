@@ -2,7 +2,106 @@
 
 A modern web application for password generation, strength analysis, and breach detection, built with FastAPI and vanilla JavaScript.
 
-![Password Security Tool Screenshot](https://via.placeholder.com/800x450.png?text=Password+Security+Tool)
+## 🌐 Try it Online
+**[🚀 Use Password Security Tool](https://password-security-tool-8hd8.onrender.com/)**
+
+---
+
+# Password Security Tool (Italiano)
+
+Un'applicazione web moderna per la generazione di password, analisi della sicurezza e rilevamento di violazioni, costruita con FastAPI e JavaScript vanilla.
+
+# Password Security Tool (Italiano)
+
+Un'applicazione web moderna per la generazione di password, analisi della sicurezza e rilevamento di violazioni, costruita con FastAPI e JavaScript vanilla.
+
+## 🚀 Caratteristiche
+
+- **🔑 Generazione Password**: Crea password sicure con opzioni personalizzabili
+- **🛡️ Analisi Sicurezza**: Analizza la forza della password con feedback dettagliato
+- **🔍 Rilevamento Violazioni**: Verifica se le password sono state compromesse usando l'API HaveIBeenPwned
+- **🌐 Multilingue**: Disponibile in inglese e italiano
+- **📱 Design Responsivo**: Funziona su desktop, tablet e dispositivi mobili
+- **🔒 Sicurezza Prioritaria**: Gestione password lato client con comunicazione API sicura
+
+## 🛠️ Stack Tecnologico
+
+- **Backend**: FastAPI (Python 3.12)
+- **Frontend**: HTML5, CSS3, JavaScript Vanilla (Nessun framework!)
+- **API**: HaveIBeenPwned per il rilevamento violazioni
+- **Deployment**: Pronto per Render, Vercel o qualsiasi hosting Python
+
+## ⚙️ Installazione
+
+1. Clona il repository:
+```bash
+git clone https://github.com/yourusername/password-security-tool.git
+cd password-security-tool
+```
+
+2. Crea un ambiente virtuale:
+```bash
+python -m venv venv
+source venv/bin/activate  # Su Windows: venv\Scripts\activate
+```
+
+3. Installa le dipendenze:
+```bash
+pip install -r requirements.txt
+```
+
+4. Avvia l'applicazione:
+```bash
+uvicorn app.main:app --reload
+```
+
+5. Apri il browser e naviga su `http://localhost:8000`
+
+## 📝 Utilizzo
+
+### Generare Password
+- Regola la lunghezza con il cursore (8-32 caratteri)
+- Scegli di includere simboli ed escludere caratteri ambigui
+- Clicca "Genera Password" per creare una password sicura
+- Copia la password generata negli appunti
+
+### Controlla Forza Password
+- Inserisci la tua password nel controllo forza
+- Visualizza analisi dettagliata inclusi tipi di carattere e raccomandazioni
+- Vedi il misuratore visivo con feedback colorato
+
+### Controlla Violazioni Dati
+- Inserisci una password per verificare violazioni note
+- Usa l'API HaveIBeenPwned per controllare lo stato di compromissione
+- Mostra il conteggio delle violazioni se la password è stata trovata
+
+## 🔌 Endpoint API
+
+- `GET /` - Pagina principale applicazione
+- `POST /api/generate` - Genera password sicura
+- `POST /api/check` - Analizza forza password
+- `POST /api/breach` - Controlla violazioni password
+
+## 🔒 Caratteristiche di Sicurezza
+
+- Le password vengono hash con SHA-1 prima del controllo violazioni
+- Solo i primi 5 caratteri dell'hash vengono inviati all'API esterna (k-anonimato)
+- Nessuna password viene memorizzata o registrata
+- Content Security Policy implementata
+- Protezione CORS
+
+## 🚀 Deployment
+
+### Render
+1. Crea un nuovo Web Service
+2. Connetti il tuo repository GitHub
+3. Usa le seguenti impostazioni:
+   - Build Command: `pip install -r requirements.txt`
+   - Start Command: `uvicorn app.main:app --host 0.0.0.0 --port $PORT`
+
+---
+
+# English Version
 
 ## 🚀 Features
 
