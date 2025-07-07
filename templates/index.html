@@ -2,279 +2,432 @@
 <html lang="it">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🔐 Strumento di Sicurezza Password</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel='stylesheet' type='text/css' href='/static/style.css'>
-    <script src="/static/translations.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://unpkg.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:;">
+    <meta name="referrer" content="no-referrer">
+    <meta name="theme-color" content="#667eea">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title data-t="title">🔐 Strumento di Sicurezza Password</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
 </head>
-<body class="min-h-screen bg-gradient-to-br from-indigo-500 to-purple-700 p-5 flex items-center justify-center">
+<body>
     <div class="container">
-        <div class="header rounded-t-xl">
-            <div class="lang-switch">
-                <span class="text-sm font-semibold">IT</span>
-                <label class="switch">
-                    <input type="checkbox" id="langToggle">
-                    <span class="slider"></span>
-                </label>
-                <span class="text-sm font-semibold">EN</span>
+        <header>
+            <div class="language-toggle">
+                <button id="lang-it" class="lang-btn active">IT</button>
+                <button id="lang-en" class="lang-btn">EN</button>
             </div>
-            <h1 class="text-4xl font-bold mb-2" data-t="title">🔐 Strumento di Sicurezza Password</h1>
-            <p class="text-lg opacity-90" data-t="subtitle">Genera, analizza e controlla le tue password.</p>
-        </div>
+            <h1 data-t="title">🔐 Strumento di Sicurezza Password</h1>
+            <p data-t="subtitle">Genera, analizza e controlla le tue password.</p>
+        </header>
 
-        <div class="flex bg-gray-50 border-b">
-            <button class="tab flex-1 py-5 px-4 font-semibold text-gray-700 hover:bg-gray-100 active" data-tab="generate" data-t="tab-gen">Genera Password</button>
-            <button class="tab flex-1 py-5 px-4 font-semibold text-gray-700 hover:bg-gray-100" data-tab="strength" data-t="tab-str">Controlla Forza</button>
-            <button class="tab flex-1 py-5 px-4 font-semibold text-gray-700 hover:bg-gray-100" data-tab="breach" data-t="tab-bre">Controlla Violazioni</button>
-        </div>
-
-        <!-- Generate Password Tab -->
-        <div id="generate" class="tab-content active p-10">
-            <h2 class="text-2xl font-bold mb-6" data-t="gen-title">Genera una Password Sicura</h2>
-            <div class="space-y-4">
-                <div>
-                    <label class="block font-semibold mb-2" data-t="gen-length">Lunghezza (8-128):</label>
-                    <input type="number" id="genLength" value="16" min="8" max="128" class="w-full p-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none">
+        <main>
+            <!-- Password Generator -->
+            <section class="card">
+                <h2 data-t="gen-title">Genera una Password Sicura</h2>
+                <div class="form-group">
+                    <label for="length" data-t="gen-length">Lunghezza (8-128):</label>
+                    <input type="range" id="length" min="8" max="32" value="16">
+                    <span id="length-value">16</span>
                 </div>
-                <div class="flex items-center gap-2">
-                    <input type="checkbox" id="genSymbols" checked class="w-4 h-4 text-blue-600">
-                    <label data-t="gen-symbols">Includi Simboli (!@#$%)</label>
+                
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" id="include-symbols" checked>
+                        <span data-t="gen-symbols">Includi Simboli (!@#$%)</span>
+                    </label>
                 </div>
-                <div class="flex items-center gap-2">
-                    <input type="checkbox" id="genAmbiguous" checked class="w-4 h-4 text-blue-600">
-                    <label data-t="gen-ambiguous">Escludi Caratteri Ambigui (0, O, 1, l, I, |)</label>
+                
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" id="exclude-ambiguous" checked>
+                        <span data-t="gen-ambiguous">Escludi Caratteri Ambigui (0, O, 1, l, I, |)</span>
+                    </label>
                 </div>
-                <button id="genBtn" class="btn w-full py-3 text-white font-semibold rounded-lg flex items-center justify-center gap-2">
-                    <span data-t="gen-btn">Genera Password</span>
-                    <div id="genSpinner" class="spinner hidden"></div>
+                
+                <button id="generate-btn" class="btn primary" data-t="gen-btn">
+                    <span>Genera Password</span>
+                    <div class="spinner"></div>
                 </button>
-            </div>
-            <div id="genResult" class="mt-6 p-5 bg-blue-50 border-l-4 border-blue-400 rounded-lg hidden">
-                <p class="font-semibold mb-2" data-t="gen-result">Password generata:</p>
-                <div class="password-result">
-                    <span id="genPassword"></span>
-                    <button class="copy-btn" onclick="copyText('genPassword')" data-t="copy">Copia</button>
+                
+                <div id="generated-password" class="password-result hidden">
+                    <div class="password-display">
+                        <input type="text" id="password-output" readonly>
+                        <button id="copy-btn" class="btn secondary" data-t="copy">Copia</button>
+                    </div>
                 </div>
-                <p class="text-sm"><span data-t="strength">Forza:</span> <span id="genStrength"></span></p>
-            </div>
-        </div>
+            </section>
 
-        <!-- Check Strength Tab -->
-        <div id="strength" class="tab-content p-10">
-            <h2 class="text-2xl font-bold mb-6" data-t="str-title">Controlla la Forza della Password</h2>
-            <div class="space-y-4">
-                <div>
-                    <label class="block font-semibold mb-2" data-t="str-label">Inserisci password:</label>
-                    <input type="password" id="strPassword" class="w-full p-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none" data-t-placeholder="password">
+            <!-- Password Checker -->
+            <section class="card">
+                <h2 data-t="str-title">Controlla la Forza della Password</h2>
+                <div class="form-group">
+                    <label for="password-input" data-t="str-label">Inserisci password:</label>
+                    <input type="password" id="password-input" data-t-placeholder="password">
+                    <button id="toggle-visibility" class="btn icon">👁️</button>
                 </div>
-                <button id="strBtn" class="btn w-full py-3 text-white font-semibold rounded-lg flex items-center justify-center gap-2">
-                    <span data-t="str-btn">Controlla Forza</span>
-                    <div id="strSpinner" class="spinner hidden"></div>
+                
+                <button id="check-btn" class="btn primary" data-t="str-btn">
+                    <span>Controlla Forza</span>
+                    <div class="spinner"></div>
                 </button>
-            </div>
-            <div id="strResult" class="mt-6 p-5 bg-green-50 border-l-4 border-green-400 rounded-lg hidden">
-                <h3 class="font-bold text-xl mb-3" data-t="str-results">Risultati:</h3>
-                <p><span data-t="str-overall">Forza:</span> <span id="strLabel"></span> (<span id="strScore"></span>/100)</p>
-                <div class="bg-gray-200 rounded-full h-3 mt-2">
-                    <div id="strBar" class="strength-bar h-full rounded-full" style="width: 0%"></div>
+                
+                <div id="strength-result" class="strength-result hidden">
+                    <div class="strength-meter">
+                        <div class="strength-bar" id="strength-bar"></div>
+                    </div>
+                    <div class="strength-details">
+                        <div class="strength-label" id="strength-label"></div>
+                        <div class="strength-info" id="strength-info"></div>
+                    </div>
                 </div>
-                <div class="mt-4 space-y-1 text-sm">
-                    <p><span data-t="str-len">Lunghezza:</span> <span id="strLen"></span></p>
-                    <p><span data-t="str-upper">Maiuscole:</span> <span id="strUpper"></span></p>
-                    <p><span data-t="str-lower">Minuscole:</span> <span id="strLower"></span></p>
-                    <p><span data-t="str-digits">Numeri:</span> <span id="strDigits"></span></p>
-                    <p><span data-t="str-special">Simboli:</span> <span id="strSpecial"></span></p>
-                    <p><span data-t="str-common">Password comune:</span> <span id="strCommon"></span></p>
-                </div>
-                <div class="mt-4">
-                    <h4 class="font-bold mb-2" data-t="str-rec">Raccomandazioni:</h4>
-                    <ul id="strRecommendations" class="list-disc pl-5 space-y-1"></ul>
-                </div>
-            </div>
-        </div>
+            </section>
 
-        <!-- Check Breach Tab -->
-        <div id="breach" class="tab-content p-10">
-            <h2 class="text-2xl font-bold mb-6" data-t="bre-title">Controlla Violazioni</h2>
-            <div class="space-y-4">
-                <div>
-                    <label class="block font-semibold mb-2" data-t="bre-label">Inserisci password:</label>
-                    <input type="password" id="brePassword" class="w-full p-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none" data-t-placeholder="password">
+            <!-- Breach Check -->
+            <section class="card">
+                <h2 data-t="bre-title">Controlla Violazioni</h2>
+                <p>Controlla se la password è stata trovata in violazioni di dati conosciute</p>
+                
+                <div class="form-group">
+                    <label for="breach-input" data-t="bre-label">Inserisci password:</label>
+                    <input type="password" id="breach-input" data-t-placeholder="password">
                 </div>
-                <button id="breBtn" class="btn w-full py-3 text-white font-semibold rounded-lg flex items-center justify-center gap-2">
-                    <span data-t="bre-btn">Controlla Password</span>
-                    <div id="breSpinner" class="spinner hidden"></div>
+                
+                <button id="breach-btn" class="btn primary" data-t="bre-btn">
+                    <span>Controlla Password</span>
+                    <div class="spinner"></div>
                 </button>
-            </div>
-            <div id="breResult" class="mt-6 p-5 rounded-lg hidden">
-                <p id="breMessage" class="font-semibold"></p>
-            </div>
-        </div>
+                
+                <div id="breach-result" class="breach-result hidden">
+                    <div class="breach-info" id="breach-info"></div>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p>Built with FastAPI and modern web technologies</p>
+        </footer>
     </div>
 
     <script>
-        // Usa le traduzioni dal file esterno
-        const t = getTranslations();
-        let lang = 'it';
+        // Translations embedded directly
+        const translations = {
+            it: {
+                title: '🔐 Strumento di Sicurezza Password',
+                subtitle: 'Genera, analizza e controlla le tue password.',
+                'gen-title': 'Genera una Password Sicura',
+                'gen-length': 'Lunghezza (8-128):',
+                'gen-symbols': 'Includi Simboli (!@#$%)',
+                'gen-ambiguous': 'Escludi Caratteri Ambigui (0, O, 1, l, I, |)',
+                'gen-btn': 'Genera Password',
+                'copy': 'Copia',
+                'str-title': 'Controlla la Forza della Password',
+                'str-label': 'Inserisci password:',
+                'str-btn': 'Controlla Forza',
+                'str-upper': 'Maiuscole',
+                'str-lower': 'Minuscole',
+                'str-digits': 'Numeri',
+                'str-special': 'Simboli',
+                'str-len': 'Lunghezza',
+                'str-rec': 'Raccomandazioni',
+                'bre-title': 'Controlla Violazioni',
+                'bre-label': 'Inserisci password:',
+                'bre-btn': 'Controlla Password',
+                'copy-success': 'Copiato!',
+                'enter-password': 'Inserisci una password',
+                'network-error': 'Errore di rete',
+                'breach-safe': 'Password sicura - non trovata in violazioni',
+                'breach-found': 'Password trovata in {count} violazioni. Cambiala!',
+                'password': 'La tua password'
+            },
+            en: {
+                title: '🔐 Password Security Tool',
+                subtitle: 'Generate, analyze and check your passwords.',
+                'gen-title': 'Generate a Secure Password',
+                'gen-length': 'Length (8-128):',
+                'gen-symbols': 'Include Symbols (!@#$%)',
+                'gen-ambiguous': 'Exclude Ambiguous Characters (0, O, 1, l, I, |)',
+                'gen-btn': 'Generate Password',
+                'copy': 'Copy',
+                'str-title': 'Check Password Strength',
+                'str-label': 'Enter password:',
+                'str-btn': 'Check Strength',
+                'str-upper': 'Uppercase',
+                'str-lower': 'Lowercase',
+                'str-digits': 'Numbers',
+                'str-special': 'Symbols',
+                'str-len': 'Length',
+                'str-rec': 'Recommendations',
+                'bre-title': 'Check Breaches',
+                'bre-label': 'Enter password:',
+                'bre-btn': 'Check Password',
+                'copy-success': 'Copied!',
+                'enter-password': 'Enter a password',
+                'network-error': 'Network error',
+                'breach-safe': 'Password safe - not found in breaches',
+                'breach-found': 'Password found in {count} breaches. Change it!',
+                'password': 'Your password'
+            }
+        };
+
+        // Initialize
+        lucide.createIcons();
+        let currentLang = 'it';
 
         // Translation function
-        function translate(l) {
-            document.querySelectorAll('[data-t]').forEach(el => {
-                const key = el.getAttribute('data-t');
-                if (t[l][key]) el.textContent = t[l][key];
-            });
-            document.querySelectorAll('[data-t-placeholder]').forEach(el => {
-                const key = el.getAttribute('data-t-placeholder');
-                if (t[l][key]) el.placeholder = t[l][key];
-            });
-            document.title = t[l].title;
-        }
-
-        // Language toggle
-        document.getElementById('langToggle').addEventListener('change', function() {
-            lang = this.checked ? 'en' : 'it';
-            translate(lang);
-        });
-
-        // Tab switching
-        document.querySelectorAll('.tab').forEach(tab => {
-            tab.addEventListener('click', () => {
-                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-                document.querySelectorAll('.tab-content').forEach(tc => tc.classList.remove('active'));
-                tab.classList.add('active');
-                document.getElementById(tab.dataset.tab).classList.add('active');
-            });
-        });
-
-        // Copy function
-        function copyText(id) {
-            const text = document.getElementById(id).textContent;
-            navigator.clipboard.writeText(text).then(() => {
-                alert(t[lang]['copy-success']);
-            });
-        }
-
-        // API call helper
-        async function apiCall(endpoint, data, spinnerId, resultId) {
-            const spinner = document.getElementById(spinnerId);
-            const result = document.getElementById(resultId);
-            
-            spinner.classList.remove('hidden');
-            result.classList.add('hidden');
-            
-            try {
-                const response = await fetch(`/api/${endpoint}`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(data)
-                });
-                
-                const responseData = await response.json();
-                
-                if (response.ok) {
-                    return responseData;
-                } else {
-                    throw new Error(responseData.detail || 'Unknown error');
+        function updateTranslations() {
+            document.querySelectorAll('[data-t]').forEach(element => {
+                const key = element.getAttribute('data-t');
+                if (translations[currentLang][key]) {
+                    element.textContent = translations[currentLang][key];
                 }
-            } catch (error) {
-                alert(t[lang]['network-error']);
-                throw error;
-            } finally {
-                spinner.classList.add('hidden');
-            }
+            });
+            
+            document.querySelectorAll('[data-t-placeholder]').forEach(element => {
+                const key = element.getAttribute('data-t-placeholder');
+                if (translations[currentLang][key]) {
+                    element.placeholder = translations[currentLang][key];
+                }
+            });
+            
+            document.title = translations[currentLang]['title'];
         }
+
+        // Language switching
+        document.getElementById('lang-it').addEventListener('click', () => {
+            currentLang = 'it';
+            updateTranslations();
+            document.getElementById('lang-it').classList.add('active');
+            document.getElementById('lang-en').classList.remove('active');
+        });
+
+        document.getElementById('lang-en').addEventListener('click', () => {
+            currentLang = 'en';
+            updateTranslations();
+            document.getElementById('lang-en').classList.add('active');
+            document.getElementById('lang-it').classList.remove('active');
+        });
+
+        // DOM elements
+        const lengthSlider = document.getElementById('length');
+        const lengthValue = document.getElementById('length-value');
+        const generateBtn = document.getElementById('generate-btn');
+        const checkBtn = document.getElementById('check-btn');
+        const breachBtn = document.getElementById('breach-btn');
+        const copyBtn = document.getElementById('copy-btn');
+        const toggleVisibilityBtn = document.getElementById('toggle-visibility');
+
+        // Update length display
+        lengthSlider.addEventListener('input', (e) => {
+            lengthValue.textContent = e.target.value;
+        });
 
         // Generate password
-        document.getElementById('genBtn').addEventListener('click', async () => {
-            const length = parseInt(document.getElementById('genLength').value);
-            const includeSymbols = document.getElementById('genSymbols').checked;
-            const excludeAmbiguous = document.getElementById('genAmbiguous').checked;
-            
+        generateBtn.addEventListener('click', async () => {
+            const length = parseInt(lengthSlider.value);
+            const includeSymbols = document.getElementById('include-symbols').checked;
+            const excludeAmbiguous = document.getElementById('exclude-ambiguous').checked;
+
+            generateBtn.classList.add('loading');
+
             try {
-                const data = await apiCall('generate', {
-                    length,
-                    include_symbols: includeSymbols,
-                    exclude_ambiguous: excludeAmbiguous
-                }, 'genSpinner', 'genResult');
+                const response = await fetch('/api/generate', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        length: length,
+                        include_symbols: includeSymbols,
+                        exclude_ambiguous: excludeAmbiguous
+                    })
+                });
+
+                const data = await response.json();
                 
-                document.getElementById('genPassword').textContent = data.password;
-                document.getElementById('genStrength').textContent = `${data.strength_label} (${data.strength_score}/100)`;
-                document.getElementById('genResult').classList.remove('hidden');
+                if (response.ok) {
+                    document.getElementById('password-output').value = data.password;
+                    document.getElementById('generated-password').classList.remove('hidden');
+                } else {
+                    alert(data.detail || 'Error generating password');
+                }
             } catch (error) {
-                // Error already handled in apiCall
+                alert(translations[currentLang]['network-error'] || 'Network error');
+            } finally {
+                generateBtn.classList.remove('loading');
             }
         });
 
-        // Check strength
-        document.getElementById('strBtn').addEventListener('click', async () => {
-            const password = document.getElementById('strPassword').value;
+        // Check password strength
+        checkBtn.addEventListener('click', async () => {
+            const password = document.getElementById('password-input').value;
+            
             if (!password) {
-                alert(t[lang]['enter-password']);
+                alert(translations[currentLang]['enter-password'] || 'Please enter a password');
                 return;
             }
-            
+
+            checkBtn.classList.add('loading');
+
             try {
-                const data = await apiCall('check', { password }, 'strSpinner', 'strResult');
-                const stats = data.stats;
-                
-                document.getElementById('strLabel').textContent = stats.strength_label;
-                document.getElementById('strScore').textContent = stats.strength_score;
-                
-                const bar = document.getElementById('strBar');
-                bar.style.width = `${stats.strength_score}%`;
-                bar.className = `strength-bar h-full rounded-full strength-${stats.strength_label.toLowerCase().replace(' ', '-')}`;
-                
-                document.getElementById('strLen').textContent = stats.length;
-                document.getElementById('strUpper').innerHTML = stats.has_upper ? t[lang]['yes'] : t[lang]['no'];
-                document.getElementById('strLower').innerHTML = stats.has_lower ? t[lang]['yes'] : t[lang]['no'];
-                document.getElementById('strDigits').innerHTML = stats.has_digits ? t[lang]['yes'] : t[lang]['no'];
-                document.getElementById('strSpecial').innerHTML = stats.has_special ? t[lang]['yes'] : t[lang]['no'];
-                document.getElementById('strCommon').innerHTML = stats.is_common ? t[lang]['warning-yes'] : t[lang]['no'];
-                
-                const recList = document.getElementById('strRecommendations');
-                recList.innerHTML = '';
-                (data.recommendations || []).forEach(rec => {
-                    const li = document.createElement('li');
-                    li.textContent = rec;
-                    recList.appendChild(li);
+                const response = await fetch('/api/check', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ password: password })
                 });
+
+                const data = await response.json();
                 
-                document.getElementById('strResult').classList.remove('hidden');
+                if (response.ok) {
+                    displayStrengthResult(data);
+                } else {
+                    alert(data.detail || 'Error checking password');
+                }
             } catch (error) {
-                // Error already handled in apiCall
+                alert(translations[currentLang]['network-error'] || 'Network error');
+            } finally {
+                checkBtn.classList.remove('loading');
             }
         });
 
         // Check breach
-        document.getElementById('breBtn').addEventListener('click', async () => {
-            const password = document.getElementById('brePassword').value;
+        breachBtn.addEventListener('click', async () => {
+            const password = document.getElementById('breach-input').value;
+            
             if (!password) {
-                alert(t[lang]['enter-password']);
+                alert(translations[currentLang]['enter-password'] || 'Please enter a password');
                 return;
             }
-            
+
+            breachBtn.classList.add('loading');
+
             try {
-                const data = await apiCall('breach', { password }, 'breSpinner', 'breResult');
-                const result = document.getElementById('breResult');
-                const message = document.getElementById('breMessage');
+                const response = await fetch('/api/breach', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ password: password })
+                });
+
+                const data = await response.json();
                 
-                if (data.count === 0) {
-                    message.textContent = t[lang]['breach-safe'];
-                    result.className = 'mt-6 p-5 rounded-lg bg-green-50 border-l-4 border-green-400';
+                if (response.ok) {
+                    displayBreachResult(data);
                 } else {
-                    message.textContent = t[lang]['breach-found'].replace('{count}', data.count);
-                    result.className = 'mt-6 p-5 rounded-lg bg-red-50 border-l-4 border-red-400';
+                    alert(data.detail || 'Error checking breach');
                 }
-                
-                result.classList.remove('hidden');
             } catch (error) {
-                // Error already handled in apiCall
+                alert(translations[currentLang]['network-error'] || 'Network error');
+            } finally {
+                breachBtn.classList.remove('loading');
             }
         });
 
-        // Initialize
-        translate(lang);
+        // Copy password
+        copyBtn.addEventListener('click', () => {
+            const passwordOutput = document.getElementById('password-output');
+            passwordOutput.select();
+            document.execCommand('copy');
+            
+            const originalText = copyBtn.textContent;
+            copyBtn.textContent = translations[currentLang]['copy-success'] || 'Copied!';
+            setTimeout(() => {
+                copyBtn.textContent = originalText;
+            }, 2000);
+        });
+
+        // Toggle password visibility
+        toggleVisibilityBtn.addEventListener('click', () => {
+            const passwordInput = document.getElementById('password-input');
+            const isPassword = passwordInput.type === 'password';
+            passwordInput.type = isPassword ? 'text' : 'password';
+            toggleVisibilityBtn.textContent = isPassword ? '🙈' : '👁️';
+        });
+
+        // Display strength result
+        function displayStrengthResult(data) {
+            const resultDiv = document.getElementById('strength-result');
+            const strengthBar = document.getElementById('strength-bar');
+            const strengthLabel = document.getElementById('strength-label');
+            const strengthInfo = document.getElementById('strength-info');
+
+            // Update strength bar
+            const percentage = (data.strength_score / 8) * 100;
+            strengthBar.style.width = percentage + '%';
+            strengthBar.className = 'strength-bar ' + data.strength_label;
+
+            // Update label
+            strengthLabel.textContent = data.strength_label.replace('-', ' ').toUpperCase();
+            strengthLabel.className = 'strength-label ' + data.strength_label;
+
+            // Update info
+            let infoHtml = `
+                <div class="strength-checks">
+                    <div class="check ${data.has_upper ? 'pass' : 'fail'}">
+                        ${translations[currentLang]['str-upper'] || 'Uppercase letters'}: ${data.has_upper ? '✓' : '✗'}
+                    </div>
+                    <div class="check ${data.has_lower ? 'pass' : 'fail'}">
+                        ${translations[currentLang]['str-lower'] || 'Lowercase letters'}: ${data.has_lower ? '✓' : '✗'}
+                    </div>
+                    <div class="check ${data.has_digits ? 'pass' : 'fail'}">
+                        ${translations[currentLang]['str-digits'] || 'Numbers'}: ${data.has_digits ? '✓' : '✗'}
+                    </div>
+                    <div class="check ${data.has_special ? 'pass' : 'fail'}">
+                        ${translations[currentLang]['str-special'] || 'Special characters'}: ${data.has_special ? '✓' : '✗'}
+                    </div>
+                    <div class="check ${data.length >= 8 ? 'pass' : 'fail'}">
+                        ${translations[currentLang]['str-len'] || 'Length'} (${data.length}): ${data.length >= 8 ? '✓' : '✗'}
+                    </div>
+                </div>
+            `;
+
+            if (data.recommendations && data.recommendations.length > 0) {
+                infoHtml += `<div class="recommendations"><h4>${translations[currentLang]['str-rec'] || 'Recommendations'}:</h4><ul>`;
+                data.recommendations.forEach(rec => {
+                    infoHtml += `<li>${rec}</li>`;
+                });
+                infoHtml += '</ul></div>';
+            }
+
+            strengthInfo.innerHTML = infoHtml;
+            resultDiv.classList.remove('hidden');
+        }
+
+        // Display breach result
+        function displayBreachResult(data) {
+            const resultDiv = document.getElementById('breach-result');
+            const breachInfo = document.getElementById('breach-info');
+
+            if (data.count === null) {
+                breachInfo.innerHTML = '<div class="breach-unknown">❓ Could not check breach status</div>';
+            } else if (data.count === 0) {
+                breachInfo.innerHTML = `<div class="breach-safe">✅ ${translations[currentLang]['breach-safe'] || 'Password safe - not found in breaches'}</div>`;
+            } else {
+                const message = translations[currentLang]['breach-found'] || 'Password found in {count} breaches. Change it!';
+                breachInfo.innerHTML = `<div class="breach-found">⚠️ ${message.replace('{count}', data.count.toLocaleString())}</div>`;
+            }
+
+            resultDiv.classList.remove('hidden');
+        }
+
+        // Fix for iOS zooming on input
+        document.addEventListener('touchstart', function(event) {
+            if (event.touches.length > 1) {
+                event.preventDefault();
+            }
+        }, { passive: false });
+        
+        let lastTouchEnd = 0;
+        document.addEventListener('touchend', function(event) {
+            const now = Date.now();
+            if (now - lastTouchEnd <= 300) {
+                event.preventDefault();
+            }
+            lastTouchEnd = now;
+        }, false);
+
+        // Initialize translations
+        updateTranslations();
     </script>
 </body>
 </html>
